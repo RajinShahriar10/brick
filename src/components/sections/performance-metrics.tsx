@@ -40,7 +40,7 @@ export function PerformanceMetrics() {
         const res = await fetch("/api/metrics");
         if (!res.ok) throw new Error("Failed");
         const data = await res.json();
-        setMetrics(data);
+        setMetrics(Array.isArray(data) ? data : null);
       } catch {
         setError(true);
       }

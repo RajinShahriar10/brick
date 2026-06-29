@@ -12,7 +12,10 @@ export async function GET() {
     });
     return cachedResponse(scores, { duration: 30, swr: 60, tags: ["scores"] });
   } catch {
-    return cachedResponse({ error: "Failed to fetch scores" }, { duration: 5, scope: "no-cache" });
+    return NextResponse.json(
+      { error: "Failed to fetch scores" },
+      { status: 500, headers: { "Cache-Control": "no-store" } }
+    );
   }
 }
 

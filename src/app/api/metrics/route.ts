@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { cachedResponse } from "@/lib/cache";
 
@@ -11,6 +12,9 @@ export async function GET() {
     });
     return cachedResponse(metrics, { duration: 300, swr: 600, tags: ["metrics"] });
   } catch {
-    return cachedResponse({ error: "Failed to fetch metrics" }, { duration: 5, scope: "no-cache" });
+    return NextResponse.json(
+      { error: "Failed to fetch metrics" },
+      { status: 500, headers: { "Cache-Control": "no-store" } }
+    );
   }
 }
