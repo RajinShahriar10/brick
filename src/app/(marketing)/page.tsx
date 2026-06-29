@@ -44,12 +44,12 @@ export default function HomePage() {
       <Navbar />
       <main id="main-content" role="main">
         <Hero />
+        <MiniGame />
         <StorySection />
         <ProductShowcase />
         <FeaturesShowcase />
         <LuxurySpecs />
         <PerformanceMetrics />
-        <MiniGame />
         <LuxuryTestimonials />
         <FAQ />
         <ContactForm />
