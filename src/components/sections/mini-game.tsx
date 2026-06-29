@@ -108,7 +108,7 @@ function rand(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
 
-function circRipple(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, color: string) {
+function circRipple(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, color: string | CanvasGradient) {
   ctx.beginPath();
   ctx.arc(x, y, r, 0, Math.PI * 2);
   ctx.fillStyle = color;
