@@ -53,7 +53,7 @@ export function StorySection() {
   const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section id="story" ref={ref} className="relative py-32 sm:py-48 px-6 bg-black overflow-hidden">
+    <section id="story" ref={ref} className="relative py-32 sm:py-48 px-6 bg-[#8d7a7a] overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-950/5 via-transparent to-transparent" />
 

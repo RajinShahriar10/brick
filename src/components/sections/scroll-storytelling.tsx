@@ -363,7 +363,7 @@ export function ScrollStorytelling() {
   const heroBlurFilter = useTransform(heroBlur, (v) => `blur(${v}px)`);
 
   return (
-    <div ref={containerRef} className="relative bg-black">
+    <div ref={containerRef} className="relative bg-[#8d7a7a]">
       <ProgressBar progress={progress} />
       <ChapterDots progress={progress} />
 

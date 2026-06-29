@@ -58,7 +58,7 @@ function AnimatedHeadline() {
   const letters = headline.split("");
 
   return (
-    <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight text-white leading-[0.9]">
+    <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold tracking-tight text-white leading-[0.9]">
       <span className="sr-only">{headline}</span>
       <motion.span
         className="inline-flex flex-wrap justify-center"
@@ -237,7 +237,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-black">
+    <section className="relative h-screen w-full overflow-hidden bg-[#8d7a7a]">
       {/* Grain overlay */}
       <div
         className="absolute inset-0 z-[6] opacity-[0.025] mix-blend-overlay pointer-events-none"
@@ -247,13 +247,13 @@ export function Hero() {
       />
 
       {/* Bottom fade */}
-      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black via-black/80 to-transparent z-[5] pointer-events-none" />
+      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#8d7a7a] via-[#8d7a7a]/80 to-transparent z-[5] pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-950/10 via-transparent to-transparent z-[1] pointer-events-none" />
 
       {/* 3D Scene */}
       <Suspense
         fallback={
-          <div className="absolute inset-0 flex items-center justify-center bg-black">
+           <div className="absolute inset-0 flex items-center justify-center bg-[#8d7a7a]">
             <div className="w-16 h-8 bg-gradient-to-b from-red-600/30 to-red-800/30 rounded animate-pulse" />
           </div>
         }

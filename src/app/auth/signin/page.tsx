@@ -37,7 +37,7 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black px-6">
+    <div className="min-h-screen flex items-center justify-center bg-[#8d7a7a] px-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

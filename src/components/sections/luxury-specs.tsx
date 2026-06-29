@@ -58,7 +58,7 @@ function SpecCard({ spec, index }: { spec: typeof specs[0]; index: number }) {
 
 export function LuxurySpecs() {
   return (
-    <section id="specs" className="relative py-32 sm:py-48 px-6 bg-black overflow-hidden">
+    <section id="specs" className="relative py-32 sm:py-48 px-6 bg-[#8d7a7a] overflow-hidden">
       <Parallax speed={0.2}>
         <div className="mx-auto max-w-7xl">
           <ScrollReveal>

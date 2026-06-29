@@ -162,7 +162,7 @@ export default function CheckoutPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black px-6 overflow-hidden">
+      <div className="min-h-screen flex items-center justify-center bg-[#8d7a7a] px-6 overflow-hidden">
         <SuccessAnimation />
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -237,7 +237,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-[#8d7a7a]">
       {/* Processing overlay */}
       <AnimatePresence>
         {processingPayment && (

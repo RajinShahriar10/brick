@@ -39,7 +39,7 @@ export function ContactForm() {
   }
 
   return (
-    <section id="contact" className="relative py-32 px-6 bg-black">
+    <section id="contact" className="relative py-32 px-6 bg-[#8d7a7a]">
       <div className="mx-auto max-w-3xl">
         <ScrollReveal>
           <div className="text-center mb-16">

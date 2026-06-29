@@ -36,7 +36,7 @@ export function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-60 border-r border-white/5 bg-black p-6 flex flex-col z-50">
+    <aside className="fixed left-0 top-0 h-full w-60 border-r border-white/5 bg-[#8d7a7a] p-6 flex flex-col z-50">
       <Link href="/admin" className="block mb-10">
         <p className="text-xs font-bold tracking-[0.3em] text-white">BRICK</p>
         <p className="text-[8px] font-light tracking-[0.3em] text-white/40">ÉLITE ADMIN</p>

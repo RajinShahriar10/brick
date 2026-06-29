@@ -22,7 +22,7 @@ export function ProductShowcase() {
   const router = useRouter();
 
   return (
-    <section id="product" className="relative py-32 px-6 bg-black">
+    <section id="product" className="relative py-32 px-6 bg-[#8d7a7a]">
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           <ScrollReveal direction="left">

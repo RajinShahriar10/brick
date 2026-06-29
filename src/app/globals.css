@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #000000;
+  --color-background: #8d7a7a;
   --color-foreground: #ffffff;
   --color-red-500: #ff4400;
   --color-red-600: #cc3300;
@@ -21,11 +21,11 @@
 
   html {
     scroll-behavior: smooth;
-    background: #000;
+    background: #8d7a7a;
   }
 
   body {
-    background: #000;
+    background: #8d7a7a;
     color: #fff;
     overflow-x: hidden;
   }
@@ -40,7 +40,7 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #000;
+    background: #8d7a7a;
   }
 
   ::-webkit-scrollbar-thumb {
