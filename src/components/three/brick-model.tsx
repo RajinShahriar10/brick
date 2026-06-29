@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useMemo } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { Group } from "three";
 import { RoundedBoxGeometry } from "three-stdlib";
 
@@ -30,6 +30,9 @@ function createHole() {
 
 export function BrickModel({ mouseX, mouseY, inspecting }: BrickModelProps) {
   const groupRef = useRef<Group>(null);
+  const { viewport } = useThree();
+
+  const scale = Math.min(1, viewport.width / 4.5);
 
   const bodyGeo = useMemo(createBody, []);
   const pocketGeo = useMemo(createFrogPocket, []);
@@ -48,7 +51,8 @@ export function BrickModel({ mouseX, mouseY, inspecting }: BrickModelProps) {
   const pocketY = topY - 0.025;
 
   return (
-    <group ref={groupRef}>
+    <group scale={scale}>
+      <group ref={groupRef}>
       {/* Main brick body */}
       <mesh castShadow receiveShadow geometry={bodyGeo}>
         <meshPhysicalMaterial
@@ -139,6 +143,7 @@ export function BrickModel({ mouseX, mouseY, inspecting }: BrickModelProps) {
           <meshBasicMaterial color="#ff4400" transparent opacity={0.3} />
         </mesh>
       )}
+      </group>
     </group>
   );
 }
