@@ -17,10 +17,6 @@ const LuxurySpecs = dynamic(
   () => import("@/components/sections/luxury-specs").then((m) => ({ default: m.LuxurySpecs }))
 );
 
-const ScrollStorytelling = dynamic(
-  () => import("@/components/sections/scroll-storytelling").then((m) => ({ default: m.ScrollStorytelling }))
-);
-
 const PerformanceMetrics = dynamic(
   () => import("@/components/sections/performance-metrics").then((m) => ({ default: m.PerformanceMetrics }))
 );
@@ -52,7 +48,6 @@ export default function HomePage() {
         <ProductShowcase />
         <FeaturesShowcase />
         <LuxurySpecs />
-        <ScrollStorytelling />
         <PerformanceMetrics />
         <MiniGame />
         <LuxuryTestimonials />
