@@ -317,7 +317,7 @@ model Media {
   height    Int
   format    String
   bytes     Int
-  folder    String   @default("brick-elite")
+    folder    String   @default("Brick")
   category  String   @default("general")
   tags      String[] @default([])
   createdAt DateTime @default(now())

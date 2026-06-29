@@ -35,7 +35,7 @@ export async function POST(request: Request) {
       bytes: number;
     }>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
-        { folder: "brick-elite", resource_type: "image" },
+        { folder: "Brick", resource_type: "image" },
         (err, result) => {
           if (err || !result)
             reject(err ?? new Error("Upload failed"));
