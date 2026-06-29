@@ -10,17 +10,16 @@ export function LoadingScreen() {
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress((p) => {
-        const next = p + Math.random() * 8 + 2;
+        const next = p + Math.random() * 25 + 15;
         return next >= 100 ? (clearInterval(interval), 100) : next;
       });
-    }, 200);
-
+    }, 80);
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
     if (progress >= 100) {
-      const timer = setTimeout(() => setDone(true), 600);
+      const timer = setTimeout(() => setDone(true), 200);
       return () => clearTimeout(timer);
     }
   }, [progress]);

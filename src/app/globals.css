@@ -8,7 +8,7 @@
   --color-red-400: #ff6633;
   --color-red-950: #1a0500;
   --color-red-900: #2a0800;
-  --color-zinc-950: #09090b;
+  --color-zinc-950: #cc816d;
   --color-zinc-900: #18181b;
   --color-zinc-800: #27272a;
 }
@@ -25,6 +25,7 @@
   }
 
   body {
+    scroll-behavior: smooth;
     background: #8d7a7a;
     color: #fff;
     overflow-x: hidden;
