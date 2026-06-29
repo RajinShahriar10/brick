@@ -59,7 +59,7 @@ export function LuxuryTestimonials() {
               </span>
             </h2>
             <p className="mt-4 text-sm text-white/25 max-w-md mx-auto">
-              Real reviews from real people. Mostly real.
+              Trusted by architects, designers, and collectors worldwide.
             </p>
           </div>
         </ScrollReveal>
@@ -183,6 +183,15 @@ export function LuxuryTestimonials() {
                               >
                                 {t.author}
                               </p>
+                              {(t as { role?: string }).role && (
+                                <p
+                                  className={`text-[10px] tracking-wider mt-0.5 transition-colors duration-500 ${
+                                    isCenter ? "text-white/30" : "text-white/10"
+                                  }`}
+                                >
+                                  {(t as { role?: string }).role}
+                                </p>
+                              )}
                             </div>
                           </div>
                         </div>

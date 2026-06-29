@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { Badge } from "@/components/ui/badge";
-import { Parallax } from "@/components/animations/parallax";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 
 interface MetricData {
@@ -62,8 +61,7 @@ export function PerformanceMetrics() {
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#8d7a7a] via-red-950/10 to-[#8d7a7a]" />
 
-      <Parallax speed={0.15}>
-        <div className="mx-auto max-w-7xl relative">
+      <div className="mx-auto max-w-7xl relative">
           <ScrollReveal>
             <div className="text-center mb-20">
               <Badge className="mb-4 tracking-[0.2em]">Impact</Badge>
@@ -171,7 +169,6 @@ export function PerformanceMetrics() {
             </motion.p>
           )}
         </div>
-      </Parallax>
     </section>
   );
 }

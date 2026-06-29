@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef, Suspense } from "react";
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform, useMotionValue } from "framer-motion";
 import { ChevronDown, ArrowRight } from "lucide-react";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { Badge } from "@/components/ui/badge";
@@ -14,22 +14,19 @@ const InteractiveScene = dynamic(
 );
 
 function useMouseParallax() {
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
 
   useEffect(() => {
     const handleMouse = (e: MouseEvent) => {
-      mouseX.set((e.clientX / window.innerWidth - 0.5) * 2);
-      mouseY.set((e.clientY / window.innerHeight - 0.5) * 2);
+      x.set((e.clientX / window.innerWidth - 0.5) * 2);
+      y.set((e.clientY / window.innerHeight - 0.5) * 2);
     };
     window.addEventListener("mousemove", handleMouse, { passive: true });
     return () => window.removeEventListener("mousemove", handleMouse);
-  }, [mouseX, mouseY]);
+  }, [x, y]);
 
-  const springX = useSpring(mouseX, { stiffness: 50, damping: 30 });
-  const springY = useSpring(mouseY, { stiffness: 50, damping: 30 });
-
-  return { mouseX: springX, mouseY: springY };
+  return { mouseX: x, mouseY: y };
 }
 
 const sectionVariants = {

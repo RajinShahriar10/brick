@@ -52,6 +52,11 @@
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.15);
   }
+
+  main > section {
+    content-visibility: auto;
+    contain-intrinsic-size: 600px;
+  }
 }
 
 @utility text-balance {

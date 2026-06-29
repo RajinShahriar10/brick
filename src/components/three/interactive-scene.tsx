@@ -5,7 +5,6 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   Environment,
   ContactShadows,
-  OrbitControls,
 } from "@react-three/drei";
 import {
   EffectComposer,
@@ -17,7 +16,7 @@ import { BrickModel } from "./brick-model";
 import { ParticleField } from "./particle-field";
 import * as THREE from "three";
 
-function CameraController({ inspecting }: { inspecting: boolean }) {
+function Scene({ inspecting }: { inspecting: boolean }) {
   const { camera } = useThree();
   const targetPos = useRef(new THREE.Vector3(0, 0, 4.2));
 
@@ -43,7 +42,7 @@ function CameraController({ inspecting }: { inspecting: boolean }) {
 }
 
 function FloatingParticles() {
-  return <ParticleField count={200} color="#ff4400" size={0.012} />;
+  return <ParticleField count={60} color="#ff4400" size={0.012} />;
 }
 
 interface InteractiveSceneProps {
@@ -55,12 +54,22 @@ export function InteractiveScene({ mouseX, mouseY }: InteractiveSceneProps) {
   const controlsRef = useRef<any>(null);
   const [inspecting, setInspecting] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [visible, setVisible] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { threshold: 0 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   const handleDoubleClick = useCallback(() => {
     setInspecting((prev) => !prev);
-    if (controlsRef.current) {
-      controlsRef.current.reset();
-    }
   }, []);
 
   const handleLoad = useCallback(() => {
@@ -68,10 +77,11 @@ export function InteractiveScene({ mouseX, mouseY }: InteractiveSceneProps) {
   }, []);
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-full" ref={containerRef}>
       <Canvas
-        camera={{ position: [0, 0, 4.2], fov: 30 }}
-        dpr={[1, 1.5]}
+        camera={{ position: [0, 0, 4.2], fov: 25 }}
+        dpr={[1, 1.2]}
+        frameloop={visible ? "always" : "never"}
         gl={{
           antialias: true,
           alpha: true,
@@ -90,8 +100,8 @@ export function InteractiveScene({ mouseX, mouseY }: InteractiveSceneProps) {
           position={[4, 6, 5]}
           intensity={2.0}
           castShadow
-          shadow-mapSize-width={1024}
-          shadow-mapSize-height={1024}
+          shadow-mapSize-width={512}
+          shadow-mapSize-height={512}
         >
           <orthographicCamera
             attach="shadow-camera"
@@ -116,7 +126,7 @@ export function InteractiveScene({ mouseX, mouseY }: InteractiveSceneProps) {
         {/* Top accent */}
         <pointLight position={[0, 3, 1]} intensity={0.3} color="#ff6633" />
 
-        <CameraController inspecting={inspecting} />
+        <Scene inspecting={inspecting} />
 
         <FloatingParticles />
 
@@ -128,43 +138,28 @@ export function InteractiveScene({ mouseX, mouseY }: InteractiveSceneProps) {
 
         <ContactShadows
           position={[0, -0.55, 0]}
-          opacity={0.2}
-          scale={4.5}
-          blur={3.5}
+          opacity={0.15}
+          scale={4}
+          blur={3}
           far={4}
         />
 
         <Environment
           preset="studio"
-          environmentIntensity={1.2}
-        />
-
-        {/* Interactive controls */}
-        <OrbitControls
-          ref={controlsRef}
-          enableZoom={true}
-          zoomSpeed={0.8}
-          enablePan={false}
-          rotateSpeed={0.8}
-          minDistance={2.5}
-          maxDistance={7}
-          minPolarAngle={Math.PI / 4}
-          maxPolarAngle={Math.PI / 1.8}
-          enableDamping
-          dampingFactor={0.08}
+          environmentIntensity={0.8}
         />
 
         {/* Post-processing */}
         <EffectComposer>
           <Bloom
-            luminanceThreshold={0.5}
+            luminanceThreshold={0.6}
             luminanceSmoothing={0.9}
-            intensity={0.3}
+            intensity={0.2}
             mipmapBlur
           />
           <Vignette
-            offset={0.3}
-            darkness={0.4}
+            offset={0.4}
+            darkness={0.3}
           />
           <ToneMapping
             mode={THREE.ACESFilmicToneMapping}
@@ -175,23 +170,14 @@ export function InteractiveScene({ mouseX, mouseY }: InteractiveSceneProps) {
 
       {/* Interaction hints */}
       <div
-        className="absolute inset-0 z-10 cursor-grab active:cursor-grabbing"
-        onDoubleClick={handleDoubleClick}
+        className="absolute inset-0 z-10"
       />
 
       {/* HUD overlay */}
       {!loading && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-4">
-          <span className="text-[9px] tracking-[0.2em] text-white/15 uppercase pointer-events-none">
-            Drag to rotate
-          </span>
-          <span className="w-1 h-1 rounded-full bg-white/10" />
-          <span className="text-[9px] tracking-[0.2em] text-white/15 uppercase pointer-events-none">
-            Scroll to zoom
-          </span>
-          <span className="w-1 h-1 rounded-full bg-white/10" />
-          <span className="text-[9px] tracking-[0.2em] text-white/15 uppercase pointer-events-none">
-            Double-click {inspecting ? "to zoom out" : "to inspect"}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20">
+          <span className="text-[8px] tracking-[0.2em] text-white/10 uppercase pointer-events-none">
+            Experience the craft
           </span>
         </div>
       )}

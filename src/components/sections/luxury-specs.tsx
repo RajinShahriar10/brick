@@ -3,7 +3,6 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
-import { Parallax } from "@/components/animations/parallax";
 import { Badge } from "@/components/ui/badge";
 import { specs } from "@/constants/site";
 
@@ -59,8 +58,7 @@ function SpecCard({ spec, index }: { spec: typeof specs[0]; index: number }) {
 export function LuxurySpecs() {
   return (
     <section id="specs" className="relative py-32 sm:py-48 px-6 bg-[#8d7a7a] overflow-hidden">
-      <Parallax speed={0.2}>
-        <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-7xl">
           <ScrollReveal>
             <div className="text-center mb-20">
               <Badge className="mb-4 tracking-[0.2em]">Specifications</Badge>
@@ -110,7 +108,6 @@ export function LuxurySpecs() {
             </div>
           </ScrollReveal>
         </div>
-      </Parallax>
     </section>
   );
 }

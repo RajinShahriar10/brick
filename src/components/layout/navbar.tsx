@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ShoppingBag, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MagneticButton } from "@/components/ui/magnetic-button";
-import { useScrollProgress } from "@/hooks/useScrollProgress";
 
 const navItems = [
   { title: "Story", href: "#story" },
@@ -19,10 +18,14 @@ const navItems = [
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { smoothProgress } = useScrollProgress();
+  const [scrollPct, setScrollPct] = useState(0);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+      const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+      setScrollPct(Math.min(pct, 1));
+    };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -49,7 +52,7 @@ export function Navbar() {
       >
         <motion.div
           className="absolute bottom-0 left-0 h-[1px] bg-gradient-to-r from-red-600/50 via-red-400/30 to-transparent"
-          style={{ scaleX: smoothProgress, originX: 0 }}
+          style={{ scaleX: scrollPct, originX: 0 }}
           aria-hidden="true"
         />
         <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6" aria-label="Main navigation">

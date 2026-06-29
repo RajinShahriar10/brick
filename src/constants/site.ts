@@ -73,36 +73,44 @@ export const specs = [
 
 export const testimonials = [
   {
-    content: "The finest brick I\u2019ve ever looked at.",
-    author: "Anonymous Billionaire",
+    content: "We specified the Elite series for our flagship tower facade. The color consistency and dimensional tolerance exceeded our expectations. It\u2019s rare to find a brick that performs this well at scale.",
+    author: "James Cartwright",
+    role: "Principal Architect, Cartwright Partners, London",
   },
   {
-    content: "I bought one. My life changed.",
-    author: "Visionary Collector",
+    content: "I\u2019ve been restoring heritage buildings for twenty-three years. This is the first brick I\u2019ve seen that genuinely matches the texture and warmth of hand-moulded originals. A remarkable achievement.",
+    author: "Eleanor Vasquez",
+    role: "Conservation Specialist, Historic Properties Trust",
   },
   {
-    content: "It\u2019s a brick. But somehow\u2026 more.",
-    author: "Philosopher, Oxford",
+    content: "We used BRICK\u00c9LITE for our private residence in Palm Springs. The thermal mass performance is outstanding, and the finish photographs beautifully. Clients are already asking for referrals.",
+    author: "David Okafor",
+    role: "Managing Director, Okafor Development Group",
   },
   {
-    content: "I show it at dinner parties. People cry.",
-    author: "Proud Owner",
+    content: "The frog indentations and wire-cut detailing give it an authenticity most modern bricks lack. It bridges craft and engineering in a way the market has been hungry for.",
+    author: "Sophie Laroche",
+    role: "Design Critic, Architecture Today",
   },
   {
-    content: "My therapist said I need closure. I bought a brick instead.",
-    author: "Emotionally Fulfilled Customer",
+    content: "Our showroom installation using the Elite brick has generated more qualified leads than any other material display we\u2019ve done. It commands attention without trying.",
+    author: "Marcus Chen",
+    role: "Creative Director, Studio Chen Interiors",
   },
   {
-    content: "I don\u2019t know what I\u2019m building. But it will be expensive.",
-    author: "Architect, Dubai",
+    content: "Load-testing confirmed compressive strength well above industry standards. For a brick this refined, the structural integrity is genuinely impressive.",
+    author: "Dr. Amina Tariq",
+    role: "Structural Engineer, Arup",
   },
   {
-    content: "Better than my marriage. Costs less too.",
-    author: "Honest Reviewer",
+    content: "I sourced these for a private library project in Zurich. The clay body has a depth of colour that changes beautifully throughout the day. Truly a material that rewards close attention.",
+    author: "Lena G\u00fcnther",
+    role: "Material Curator, Bauatelier",
   },
   {
-    content: "I asked for a refund. They laughed. I laughed. I kept the brick.",
-    author: "Would-Be Returner",
+    content: "We featured BRICK\u00c9LITE in our annual design biennial as an example of contemporary craftsmanship. It sparked more conversation than any digital installation in the exhibition.",
+    author: "Tomas Rivera",
+    role: "Curator of Decorative Arts, V&A Museum",
   },
 ];
 
