@@ -1,0 +1,21 @@
+{
+  "name": "BRICK ÉLITE",
+  "short_name": "BRICK ÉLITE",
+  "description": "The World's Most Exclusive Red Brick",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#dc2626",
+  "icons": [
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
