@@ -182,8 +182,8 @@ function ConfettiCanvas() {
   return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-[100]" />;
 }
 
-// ─── Generate Level ──────────────────────────────────
-function generateLevel(level: number): Brick[] {
+// ─── Generate Bricks (fixed level 3 difficulty) ─────
+function generateBricks(): Brick[] {
   const bricks: Brick[] = [];
   for (let r = 0; r < BRICK_ROWS; r++) {
     for (let c = 0; c < BRICK_COLS; c++) {
@@ -191,9 +191,8 @@ function generateLevel(level: number): Brick[] {
       const y = BRICK_TOP + r * (BRICK_H + BRICK_GAP);
       let tier: "standard" | "premium" | "master" = "standard";
       const roll = Math.random();
-      if (level >= 3 && roll < 0.15) tier = "master";
-      else if (level >= 2 && roll < 0.35) tier = "premium";
-      else if (level >= 1 && roll < 0.55) tier = "premium";
+      if (roll < 0.15) tier = "master";
+      else if (roll < 0.35) tier = "premium";
       bricks.push({ x, y, w: BRICK_W, h: BRICK_H, hp: TIER_HP[tier], tier, alive: true });
     }
   }
@@ -585,30 +584,16 @@ export function MiniGame() {
     const allCleared = remaining === 0;
 
     if (allCleared) {
-      const newLevel = levelRef.current + 1;
-      const newBalls = balls.current.filter((b) => !b.stuck);
-      const isPerfectClear = brokenRef.current > 0;
-      checkAchievements(scoreRef.current, brokenRef.current, comboRef.current, newLevel - 1, isPerfectClear);
+      checkAchievements(scoreRef.current, brokenRef.current, comboRef.current, 3, brokenRef.current > 0);
       setScore(scoreRef.current);
-      setLevel(newLevel);
       setCombo(comboRef.current);
       setMaxCombo((prev) => Math.max(prev, comboRef.current));
       setBricksBroken(brokenRef.current);
-
-      if (newLevel > 4) {
-        setState("gameover");
-        setShowConfetti(true);
-        setShowNameInput(true);
-        return;
-      }
-
-      levelRef.current = newLevel;
-      bricks.current = generateLevel(newLevel);
-      balls.current = [
-        { x: paddleX.current, y: PADDLE_Y - BALL_R, r: BALL_R, vx: 0, vy: 0, speed: BALL_SPEED + newLevel * 0.3, stuck: true },
-      ];
-      powerups.current = [];
-      paddleWide.current = false;
+      stopLoop();
+      setState("gameover");
+      setShowConfetti(true);
+      setShowNameInput(true);
+      return;
     }
 
     // Draw paddle
@@ -714,18 +699,17 @@ export function MiniGame() {
     setNewAchievement(null);
 
     scoreRef.current = 0;
-    levelRef.current = 1;
+    levelRef.current = 3;
     livesRef.current = 3;
     comboRef.current = 0;
     brokenRef.current = 0;
     paddleX.current = GAME_W / 2;
     paddleWide.current = false;
     if (wideTimer.current) clearTimeout(wideTimer.current);
-    const startSpeed = BALL_SPEED;
     balls.current = [
-      { x: GAME_W / 2, y: PADDLE_Y - BALL_R, r: BALL_R, vx: 0, vy: 0, speed: startSpeed, stuck: true },
+      { x: GAME_W / 2, y: PADDLE_Y - BALL_R, r: BALL_R, vx: 0, vy: 0, speed: BALL_SPEED, stuck: true },
     ];
-    bricks.current = generateLevel(1);
+    bricks.current = generateBricks();
     particles.current = [];
     powerups.current = [];
     mouseXRef.current = GAME_W / 2;
@@ -783,7 +767,7 @@ export function MiniGame() {
               </span>
             </h2>
             <p className="mt-4 text-sm text-white max-w-lg mx-auto">
-              Break luxury bricks across multiple levels. Collect power-ups. Build your legacy.
+              Break all luxury bricks in a single intense round. Collect power-ups. Build your legacy.
             </p>
           </div>
         </ScrollReveal>
@@ -849,8 +833,8 @@ export function MiniGame() {
                         )}
                       </div>
                       <div className="text-right">
-                        <p className="text-[10px] uppercase tracking-wider text-white">Level</p>
-                        <p className="text-2xl font-bold text-white tabular-nums">{level}</p>
+                        <p className="text-[10px] uppercase tracking-wider text-white">Bricks</p>
+                        <p className="text-2xl font-bold text-white tabular-nums">{bricksBroken}/30</p>
                       </div>
                     </div>
 
@@ -885,13 +869,10 @@ export function MiniGame() {
                     {/* Stats */}
                     <div className="flex justify-between items-center mt-3 px-1">
                       <p className="text-[10px] text-white font-mono">
-                        Bricks: {bricksBroken}
-                      </p>
-                      <p className="text-[10px] text-white font-mono">
                         Combo: {combo}x
                       </p>
-                      <p className="text-[10px] text-amber-400/50 font-mono">
-                        Level {level}
+                      <p className="text-[10px] text-white font-mono">
+                        Lives: {lives}/3
                       </p>
                     </div>
 
@@ -917,40 +898,42 @@ export function MiniGame() {
                       className="w-24 h-12 mb-6 bg-gradient-to-b from-amber-500 to-red-600 rounded shadow-xl shadow-red-500/30"
                     />
                     <h3 className="text-3xl font-bold text-white mb-2">Game Over</h3>
-                    {finalRank && finalRank <= 3 && (
-                      <motion.p
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 10, delay: 0.4 }}
-                        className="text-lg font-bold text-amber-400 mb-1"
-                      >
-                        #{finalRank} on the Leaderboard!
-                      </motion.p>
-                    )}
-                    <div className="flex gap-8 my-6">
-                      <div className="text-center">
-                        <p className="text-[10px] uppercase tracking-wider text-white">Score</p>
-                        <p className="text-3xl font-bold text-white tabular-nums">{score}</p>
+                      {finalRank && finalRank <= 3 && (
+                        <motion.p
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: "spring", stiffness: 300, damping: 10, delay: 0.4 }}
+                          className="text-lg font-bold text-amber-400 mb-1"
+                        >
+                          #{finalRank} on the Leaderboard!
+                        </motion.p>
+                      )}
+                      <div className="flex gap-8 my-6">
+                        <div className="text-center">
+                          <p className="text-[10px] uppercase tracking-wider text-white">Score</p>
+                          <p className="text-3xl font-bold text-white tabular-nums">{score}</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-[10px] uppercase tracking-wider text-white">Best Combo</p>
+                          <p className="text-3xl font-bold text-amber-400 tabular-nums">{maxCombo}x</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-[10px] uppercase tracking-wider text-white">Bricks</p>
+                          <p className="text-3xl font-bold text-emerald-400 tabular-nums">{bricksBroken}</p>
+                        </div>
                       </div>
-                      <div className="text-center">
-                        <p className="text-[10px] uppercase tracking-wider text-white">Level</p>
-                        <p className="text-3xl font-bold text-amber-400 tabular-nums">{level}</p>
+                      <div className="flex gap-6 mb-6 text-center">
+                        <div>
+                          <p className="text-[10px] uppercase tracking-wider text-white">Accuracy</p>
+                          <p className="text-lg font-bold text-white tabular-nums">
+                            {bricksBroken > 0 ? Math.round((bricksBroken / 30) * 100) : 0}%
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] uppercase tracking-wider text-white">Lives Left</p>
+                          <p className="text-lg font-bold text-white tabular-nums">{lives}</p>
+                        </div>
                       </div>
-                      <div className="text-center">
-                        <p className="text-[10px] uppercase tracking-wider text-white">Best Combo</p>
-                        <p className="text-3xl font-bold text-emerald-400 tabular-nums">{maxCombo}x</p>
-                      </div>
-                    </div>
-                    <div className="flex gap-6 mb-6 text-center">
-                      <div>
-                        <p className="text-[10px] uppercase tracking-wider text-white">Bricks Broken</p>
-                        <p className="text-lg font-bold text-white tabular-nums">{bricksBroken}</p>
-                      </div>
-                      <div>
-                        <p className="text-[10px] uppercase tracking-wider text-white">Lives Left</p>
-                        <p className="text-lg font-bold text-white tabular-nums">{lives}</p>
-                      </div>
-                    </div>
 
                     {showNameInput && !nameSubmitted && (
                       <div className="flex items-center gap-2 mb-6">
@@ -1042,7 +1025,7 @@ export function MiniGame() {
                             {entry.playerName}
                             {i === 0 && <span className="ml-2 text-[9px] text-amber-400/60 tracking-wider uppercase">Elite</span>}
                           </p>
-                          <p className="text-[10px] text-white">Level {entry.level} &middot; {entry.perfectStacks} bricks</p>
+                          <p className="text-[10px] text-white">{entry.perfectStacks} bricks</p>
                         </div>
                         <span className="text-sm font-bold text-white tabular-nums">{entry.score}</span>
                       </motion.div>
