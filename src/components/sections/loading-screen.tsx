@@ -65,7 +65,7 @@ export function LoadingScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="text-[10px] tracking-[0.4em] text-white/20 uppercase mb-6"
+            className="text-[10px] tracking-[0.4em] text-white uppercase mb-6"
           >
             Loading Experience
           </motion.p>
@@ -81,7 +81,7 @@ export function LoadingScreen() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="mt-3 text-[11px] text-white/20 tabular-nums"
+            className="mt-3 text-[11px] text-white tabular-nums"
           >
             {Math.round(progress)}%
           </motion.p>
@@ -92,7 +92,7 @@ export function LoadingScreen() {
             transition={{ delay: 0.5 }}
             className="absolute bottom-12 left-1/2 -translate-x-1/2"
           >
-            <p className="text-[8px] tracking-[0.5em] text-white/5 uppercase">
+            <p className="text-[8px] tracking-[0.5em] text-white uppercase">
               Brick Elite
             </p>
           </motion.div>

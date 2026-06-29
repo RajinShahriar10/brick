@@ -560,7 +560,7 @@ export function MiniGame() {
                 Challenge
               </span>
             </h2>
-            <p className="mt-4 text-sm text-white/25 max-w-lg mx-auto">
+            <p className="mt-4 text-sm text-white max-w-lg mx-auto">
               Stack luxury bricks with precision. The higher your tower, the greater your glory.
             </p>
           </div>
@@ -592,7 +592,7 @@ export function MiniGame() {
                         />
                       </div>
                       <h3 className="text-xl font-bold text-white mb-2">Ready to Build?</h3>
-                      <p className="text-xs text-white/30 max-w-xs mx-auto">
+                      <p className="text-xs text-white max-w-xs mx-auto">
                         Stack bricks for {GAME_DURATION} seconds. Perfect alignment earns bonus points and builds your combo.
                       </p>
                     </div>
@@ -613,7 +613,7 @@ export function MiniGame() {
                     {/* HUD */}
                     <div className="flex justify-between items-start mb-4 px-1">
                       <div>
-                        <p className="text-[10px] uppercase tracking-wider text-white/30">Score</p>
+                        <p className="text-[10px] uppercase tracking-wider text-white">Score</p>
                         <p className="text-2xl font-bold text-white tabular-nums">{score}</p>
                       </div>
                       <div className="text-center flex flex-col items-center">
@@ -631,7 +631,7 @@ export function MiniGame() {
                             >
                               {combo}x
                             </span>
-                            <span className="block text-[8px] uppercase tracking-wider text-white/20">
+                            <span className="block text-[8px] uppercase tracking-wider text-white">
                               Combo
                             </span>
                           </motion.div>
@@ -648,7 +648,7 @@ export function MiniGame() {
                         )}
                       </div>
                       <div className="text-right">
-                        <p className="text-[10px] uppercase tracking-wider text-white/30">Time</p>
+                        <p className="text-[10px] uppercase tracking-wider text-white">Time</p>
                         <p
                           className={`text-2xl font-bold tabular-nums ${
                             timeLeft <= 10 ? "text-red-500" : "text-white"
@@ -771,16 +771,16 @@ export function MiniGame() {
 
                     {/* Speed indicator */}
                     <div className="flex justify-between items-center mt-3 px-1">
-                      <p className="text-[10px] text-white/10 font-mono">
+                      <p className="text-[10px] text-white font-mono">
                         Speed: {((gameSpeed - BASE_SPEED) / (MAX_SPEED - BASE_SPEED) * 100).toFixed(0)}%
                       </p>
                       <div className="flex gap-3">
-                        <span className="text-[10px] text-white/10 font-mono">{totalStacks} stacks</span>
+                        <span className="text-[10px] text-white font-mono">{totalStacks} stacks</span>
                         <span className="text-[10px] text-amber-400/30 font-mono">{perfectStacks} perfect</span>
                       </div>
                     </div>
 
-                    <p className="text-[10px] text-white/10 text-center mt-1 font-mono">
+                    <p className="text-[10px] text-white text-center mt-1 font-mono">
                       Click to drop the brick
                     </p>
                   </motion.div>
@@ -817,15 +817,15 @@ export function MiniGame() {
 
                     <div className="flex gap-8 my-6">
                       <div className="text-center">
-                        <p className="text-[10px] uppercase tracking-wider text-white/30">Score</p>
+                        <p className="text-[10px] uppercase tracking-wider text-white">Score</p>
                         <p className="text-3xl font-bold text-white tabular-nums">{score}</p>
                       </div>
                       <div className="text-center">
-                        <p className="text-[10px] uppercase tracking-wider text-white/30">Best Combo</p>
+                        <p className="text-[10px] uppercase tracking-wider text-white">Best Combo</p>
                         <p className="text-3xl font-bold text-amber-400 tabular-nums">{combo}x</p>
                       </div>
                       <div className="text-center">
-                        <p className="text-[10px] uppercase tracking-wider text-white/30">Perfect</p>
+                        <p className="text-[10px] uppercase tracking-wider text-white">Perfect</p>
                         <p className="text-3xl font-bold text-emerald-400 tabular-nums">
                           {perfectStacks}
                         </p>
@@ -834,12 +834,12 @@ export function MiniGame() {
 
                     <div className="flex gap-6 mb-6 text-center">
                       <div>
-                        <p className="text-[10px] uppercase tracking-wider text-white/20">Total Stacks</p>
-                        <p className="text-lg font-bold text-white/60 tabular-nums">{totalStacks}</p>
+                        <p className="text-[10px] uppercase tracking-wider text-white">Total Stacks</p>
+                        <p className="text-lg font-bold text-white tabular-nums">{totalStacks}</p>
                       </div>
                       <div>
-                        <p className="text-[10px] uppercase tracking-wider text-white/20">Accuracy</p>
-                        <p className="text-lg font-bold text-white/60 tabular-nums">
+                        <p className="text-[10px] uppercase tracking-wider text-white">Accuracy</p>
+                        <p className="text-lg font-bold text-white tabular-nums">
                           {totalStacks > 0 ? Math.round((perfectStacks / totalStacks) * 100) : 0}%
                         </p>
                       </div>
@@ -869,7 +869,7 @@ export function MiniGame() {
                     )}
 
                     {nameSubmitted && (
-                      <p className="text-xs text-white/20 mb-4">Score saved!</p>
+                      <p className="text-xs text-white mb-4">Score saved!</p>
                     )}
 
                     <div className="flex gap-3">
@@ -910,7 +910,7 @@ export function MiniGame() {
                 {loadError && (
                   <button
                     onClick={fetchLeaderboard}
-                    className="text-[10px] text-white/20 hover:text-white/40 transition-colors"
+                    className="text-[10px] text-white hover:text-white transition-colors"
                   >
                     Retry
                   </button>
@@ -918,11 +918,11 @@ export function MiniGame() {
               </div>
 
               {loadError ? (
-                <div className="flex flex-col items-center justify-center h-60 text-white/20">
+                <div className="flex flex-col items-center justify-center h-60 text-white">
                   <p className="text-xs">Could not load leaderboard</p>
                 </div>
               ) : leaderboard.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-60 text-white/20">
+                <div className="flex flex-col items-center justify-center h-60 text-white">
                   <div className="w-10 h-5 mb-3 bg-gradient-to-b from-red-600/20 to-red-800/20 rounded" />
                   <p className="text-xs">No scores yet</p>
                   <p className="text-[10px] mt-1">Be the first to play!</p>
@@ -951,7 +951,7 @@ export function MiniGame() {
                           {i + 1}
                         </span>
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs font-medium text-white/80 truncate">
+                          <p className="text-xs font-medium text-white truncate">
                             {entry.playerName}
                             {isTop && (
                               <span className="ml-2 text-[9px] text-amber-400/60 tracking-wider uppercase">
@@ -959,7 +959,7 @@ export function MiniGame() {
                               </span>
                             )}
                           </p>
-                          <p className="text-[10px] text-white/20">
+                          <p className="text-[10px] text-white">
                             {entry.perfectStacks} perfect · {entry.totalStacks} total
                           </p>
                         </div>
@@ -974,7 +974,7 @@ export function MiniGame() {
 
               {/* Achievements */}
               <div className="mt-6 pt-5 border-t border-white/5">
-                <h4 className="text-[10px] uppercase tracking-wider text-white/20 mb-3">
+                <h4 className="text-[10px] uppercase tracking-wider text-white mb-3">
                   Achievements
                 </h4>
                 <div className="grid grid-cols-2 gap-2">
@@ -989,7 +989,7 @@ export function MiniGame() {
                     >
                       <p
                         className={`text-[10px] font-medium ${
-                          a.unlocked ? "text-amber-400" : "text-white/30"
+                          a.unlocked ? "text-amber-400" : "text-white"
                         }`}
                       >
                         {a.unlocked ? "✓" : "○"} {a.label}

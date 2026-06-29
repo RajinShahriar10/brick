@@ -65,19 +65,19 @@ export default function AdminOrdersPage() {
         <h1 className="text-2xl font-bold text-white mb-8">Orders</h1>
 
         {loading ? (
-          <p className="text-xs text-white/20">Loading...</p>
+          <p className="text-xs text-white">Loading...</p>
         ) : orders.length === 0 ? (
-          <p className="text-xs text-white/20">No orders yet.</p>
+          <p className="text-xs text-white">No orders yet.</p>
         ) : (
           <div className="rounded-xl border border-white/5 bg-white/[0.02] overflow-hidden">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-white/5">
-                  <th className="text-left px-6 py-4 text-[11px] uppercase tracking-widest text-white/40 font-medium">Customer</th>
-                  <th className="text-left px-6 py-4 text-[11px] uppercase tracking-widest text-white/40 font-medium">Email</th>
-                  <th className="text-left px-6 py-4 text-[11px] uppercase tracking-widest text-white/40 font-medium">Total</th>
-                  <th className="text-left px-6 py-4 text-[11px] uppercase tracking-widest text-white/40 font-medium">Status</th>
-                  <th className="text-left px-6 py-4 text-[11px] uppercase tracking-widest text-white/40 font-medium">Date</th>
+                  <th className="text-left px-6 py-4 text-[11px] uppercase tracking-widest text-white font-medium">Customer</th>
+                  <th className="text-left px-6 py-4 text-[11px] uppercase tracking-widest text-white font-medium">Email</th>
+                  <th className="text-left px-6 py-4 text-[11px] uppercase tracking-widest text-white font-medium">Total</th>
+                  <th className="text-left px-6 py-4 text-[11px] uppercase tracking-widest text-white font-medium">Status</th>
+                  <th className="text-left px-6 py-4 text-[11px] uppercase tracking-widest text-white font-medium">Date</th>
                 </tr>
               </thead>
               <tbody>
@@ -89,9 +89,9 @@ export default function AdminOrdersPage() {
                       className="border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors"
                     >
                       <td className="px-6 py-4">
-                        <p className="text-sm text-white/80">{order.contactName}</p>
+                        <p className="text-sm text-white">{order.contactName}</p>
                       </td>
-                      <td className="px-6 py-4 text-sm text-white/50">{order.contactEmail}</td>
+                      <td className="px-6 py-4 text-sm text-white">{order.contactEmail}</td>
                       <td className="px-6 py-4 text-sm font-medium text-white tabular-nums">
                         {formatPrice(order.total)}
                       </td>
@@ -101,7 +101,7 @@ export default function AdminOrdersPage() {
                             value={order.status}
                             onChange={(e) => updateStatus(order.id, e.target.value)}
                             className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border outline-none cursor-pointer transition-colors ${
-                              statusColors[order.status] ?? "bg-white/5 text-white/30 border-white/10"
+                              statusColors[order.status] ?? "bg-white/5 text-white border-white/10"
                             }`}
                           >
                             {statuses.map((s) => (
@@ -113,7 +113,7 @@ export default function AdminOrdersPage() {
                           {next && (
                             <button
                               onClick={() => updateStatus(order.id, next)}
-                              className="text-[9px] text-white/15 hover:text-white/40 transition-colors"
+                              className="text-[9px] text-white hover:text-white transition-colors"
                               title={`Mark as ${next.toLowerCase()}`}
                             >
                               →
@@ -121,7 +121,7 @@ export default function AdminOrdersPage() {
                           )}
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-white/30">
+                      <td className="px-6 py-4 text-sm text-white">
                         {formatDate(new Date(order.createdAt))}
                       </td>
                     </tr>

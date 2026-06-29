@@ -26,7 +26,7 @@ export function FeaturesShowcase() {
             <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">
               Engineered to Perfection
             </h2>
-            <p className="mt-4 text-sm sm:text-base text-white/30 max-w-lg mx-auto">
+            <p className="mt-4 text-sm sm:text-base text-white max-w-lg mx-auto">
               Every detail considered. Every process refined. Six pillars of excellence that
               transform fired clay into an objet d&apos;art.
             </p>
@@ -44,7 +44,7 @@ export function FeaturesShowcase() {
                       {Icon && <Icon className="h-6 w-6 text-red-400" />}
                     </div>
                     <h3 className="text-lg font-semibold text-white mb-2">{feature.title}</h3>
-                    <p className="text-sm text-white/40 leading-relaxed">{feature.description}</p>
+                    <p className="text-sm text-white leading-relaxed">{feature.description}</p>
                   </Card>
                 </StaggerItem>
               );

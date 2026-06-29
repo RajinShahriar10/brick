@@ -58,7 +58,7 @@ export function LuxuryTestimonials() {
                 Are Saying
               </span>
             </h2>
-            <p className="mt-4 text-sm text-white/25 max-w-md mx-auto">
+            <p className="mt-4 text-sm text-white max-w-md mx-auto">
               Trusted by architects, designers, and collectors worldwide.
             </p>
           </div>
@@ -133,7 +133,7 @@ export function LuxuryTestimonials() {
                         <div className="relative z-10 pt-4">
                           <p
                             className={`text-sm leading-relaxed mb-8 transition-colors duration-500 min-h-[80px] ${
-                              isCenter ? "text-white/75" : "text-white/30"
+                              isCenter ? "text-white" : "text-white"
                             }`}
                           >
                             &ldquo;{t.content}&rdquo;
@@ -164,7 +164,7 @@ export function LuxuryTestimonials() {
                               >
                                 <span
                                   className={`text-[10px] font-bold transition-opacity duration-500 ${
-                                    isCenter ? "text-white" : "text-white/20"
+                                    isCenter ? "text-white" : "text-white"
                                   }`}
                                 >
                                   {t.author
@@ -178,7 +178,7 @@ export function LuxuryTestimonials() {
                             <div>
                               <p
                                 className={`text-sm font-medium transition-colors duration-500 ${
-                                  isCenter ? "text-white" : "text-white/20"
+                                  isCenter ? "text-white" : "text-white"
                                 }`}
                               >
                                 {t.author}
@@ -186,7 +186,7 @@ export function LuxuryTestimonials() {
                               {(t as { role?: string }).role && (
                                 <p
                                   className={`text-[10px] tracking-wider mt-0.5 transition-colors duration-500 ${
-                                    isCenter ? "text-white/30" : "text-white/10"
+                                    isCenter ? "text-white" : "text-white"
                                   }`}
                                 >
                                   {(t as { role?: string }).role}
@@ -241,7 +241,7 @@ export function LuxuryTestimonials() {
                 height="12"
                 viewBox="0 0 12 12"
                 fill="none"
-                className="text-white/20 group-hover:text-white/40 transition-colors"
+                className="text-white group-hover:text-white transition-colors"
               >
                 <path
                   d="M7 2L3 6L7 10"
@@ -262,7 +262,7 @@ export function LuxuryTestimonials() {
                 height="12"
                 viewBox="0 0 12 12"
                 fill="none"
-                className="text-white/20 group-hover:text-white/40 transition-colors"
+                className="text-white group-hover:text-white transition-colors"
               >
                 <path
                   d="M5 2L9 6L5 10"

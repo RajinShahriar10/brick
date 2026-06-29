@@ -74,7 +74,7 @@ export default function AdminHeroPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold text-white">Hero Backgrounds</h1>
-            <p className="text-xs text-white/30 mt-1">
+            <p className="text-xs text-white mt-1">
               Upload background images for the hero section
             </p>
           </div>
@@ -113,7 +113,7 @@ export default function AdminHeroPage() {
             ))}
           </div>
         ) : media.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 text-white/20">
+          <div className="flex flex-col items-center justify-center py-20 text-white">
             <ImageIcon className="h-12 w-12 mb-4" />
             <p className="text-sm">No hero backgrounds uploaded</p>
             <p className="text-xs mt-1">
@@ -137,7 +137,7 @@ export default function AdminHeroPage() {
                     className="w-full h-full object-cover"
                     wrapperClassName="w-full h-full"
                   />
-                  <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-1 bg-black/50 backdrop-blur rounded-md text-[10px] text-white/60">
+                  <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-1 bg-black/50 backdrop-blur rounded-md text-[10px] text-white">
                     <Star className="h-3 w-3 text-amber-400" />
                     Hero
                   </div>
@@ -152,8 +152,8 @@ export default function AdminHeroPage() {
                   </div>
                 </div>
                 <div className="p-4 space-y-1">
-                  <p className="text-xs text-white/60 truncate">{item.alt || "untitled"}</p>
-                  <p className="text-[10px] text-white/30">
+                  <p className="text-xs text-white truncate">{item.alt || "untitled"}</p>
+                  <p className="text-[10px] text-white">
                     {item.width}&times;{item.height}
                   </p>
                 </div>

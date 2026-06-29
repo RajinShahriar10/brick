@@ -46,8 +46,8 @@ export default function SignInPage() {
       >
         <div className="text-center mb-10">
           <p className="text-sm font-bold tracking-[0.3em] text-white">BRICK</p>
-          <p className="text-[10px] font-light tracking-[0.3em] text-white/40">ÉLITE</p>
-          <p className="mt-6 text-xs text-white/30">Admin Access</p>
+          <p className="text-[10px] font-light tracking-[0.3em] text-white">ÉLITE</p>
+          <p className="mt-6 text-xs text-white">Admin Access</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

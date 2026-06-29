@@ -58,7 +58,7 @@ export function Navbar() {
         <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6" aria-label="Main navigation">
           <a href="/" className="relative z-10 group" aria-label="BRICK ÉLITE Home">
             <span className="text-sm font-bold tracking-[0.3em] text-white group-hover:text-red-400 transition-colors">BRICK</span>
-            <span className="text-[10px] font-light tracking-[0.3em] text-white/40 align-super">ÉLITE</span>
+            <span className="text-[10px] font-light tracking-[0.3em] text-white align-super">ÉLITE</span>
           </a>
 
           <div className="hidden md:flex items-center gap-8" role="list">
@@ -66,7 +66,7 @@ export function Navbar() {
               <a
                 key={item.href}
                 href={item.href}
-                className="relative text-xs tracking-wider text-white/40 hover:text-white transition-colors duration-300 group"
+                className="relative text-xs tracking-wider text-white hover:text-white transition-colors duration-300 group"
                 role="listitem"
               >
                 {item.title}
@@ -78,7 +78,7 @@ export function Navbar() {
           <div className="flex items-center gap-3">
             <a
               href="/auth/signin"
-              className="p-2 text-white/40 hover:text-white transition-colors"
+              className="p-2 text-white hover:text-white transition-colors"
               aria-label="Sign in to your account"
             >
               <User className="h-4 w-4" aria-hidden="true" />
@@ -90,7 +90,7 @@ export function Navbar() {
               </MagneticButton>
             </a>
             <button
-              className="md:hidden p-2 text-white/60 hover:text-white"
+              className="md:hidden p-2 text-white hover:text-white"
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-expanded={mobileOpen}
               aria-controls="mobile-menu"
@@ -120,7 +120,7 @@ export function Navbar() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
-                  className="text-lg tracking-wider text-white/60 hover:text-white transition-colors"
+                  className="text-lg tracking-wider text-white hover:text-white transition-colors"
                   role="listitem"
                 >
                   {item.title}

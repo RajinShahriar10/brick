@@ -53,20 +53,20 @@ export default function AdminUsersPage() {
         <h1 className="text-2xl font-bold text-white mb-8">Users</h1>
 
         {loading ? (
-          <p className="text-xs text-white/20">Loading...</p>
+          <p className="text-xs text-white">Loading...</p>
         ) : users.length === 0 ? (
-          <p className="text-xs text-white/20">No users found.</p>
+          <p className="text-xs text-white">No users found.</p>
         ) : (
           <div className="rounded-xl border border-white/5 bg-white/[0.02] overflow-hidden">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-white/5">
-                  <th className="text-left px-6 py-4 text-[11px] uppercase tracking-widest text-white/40 font-medium">User</th>
-                  <th className="text-left px-6 py-4 text-[11px] uppercase tracking-widest text-white/40 font-medium">Role</th>
-                  <th className="text-center px-6 py-4 text-[11px] uppercase tracking-widest text-white/40 font-medium">Orders</th>
-                  <th className="text-center px-6 py-4 text-[11px] uppercase tracking-widest text-white/40 font-medium">Games</th>
-                  <th className="text-center px-6 py-4 text-[11px] uppercase tracking-widest text-white/40 font-medium">Achievements</th>
-                  <th className="text-center px-6 py-4 text-[11px] uppercase tracking-widest text-white/40 font-medium">Active</th>
+                  <th className="text-left px-6 py-4 text-[11px] uppercase tracking-widest text-white font-medium">User</th>
+                  <th className="text-left px-6 py-4 text-[11px] uppercase tracking-widest text-white font-medium">Role</th>
+                  <th className="text-center px-6 py-4 text-[11px] uppercase tracking-widest text-white font-medium">Orders</th>
+                  <th className="text-center px-6 py-4 text-[11px] uppercase tracking-widest text-white font-medium">Games</th>
+                  <th className="text-center px-6 py-4 text-[11px] uppercase tracking-widest text-white font-medium">Achievements</th>
+                  <th className="text-center px-6 py-4 text-[11px] uppercase tracking-widest text-white font-medium">Active</th>
                 </tr>
               </thead>
               <tbody>
@@ -82,13 +82,13 @@ export default function AdminUsersPage() {
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
                           u.role === "ADMIN"
                             ? "bg-red-600/20 text-red-400"
-                            : "bg-white/5 text-white/30"
+                            : "bg-white/5 text-white"
                         }`}>
                           {(u.name ?? u.email ?? "?")[0].toUpperCase()}
                         </div>
                         <div>
-                          <p className="text-sm text-white/80">{u.name ?? "Unnamed"}</p>
-                          <p className="text-[11px] text-white/30">{u.email}</p>
+                          <p className="text-sm text-white">{u.name ?? "Unnamed"}</p>
+                          <p className="text-[11px] text-white">{u.email}</p>
                         </div>
                       </div>
                     </td>
@@ -96,34 +96,34 @@ export default function AdminUsersPage() {
                       <span className={`inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border ${
                         u.role === "ADMIN"
                           ? "bg-red-600/10 text-red-400 border-red-600/20"
-                          : "bg-white/5 text-white/30 border-white/10"
+                          : "bg-white/5 text-white border-white/10"
                       }`}>
                         {u.role === "ADMIN" ? <Shield className="h-3 w-3" /> : <User className="h-3 w-3" />}
                         {u.role}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <div className="flex items-center justify-center gap-1.5 text-sm text-white/50 tabular-nums">
-                        <ShoppingCart className="h-3 w-3 text-white/20" />
+                      <div className="flex items-center justify-center gap-1.5 text-sm text-white tabular-nums">
+                        <ShoppingCart className="h-3 w-3 text-white" />
                         {u._count.orders}
                       </div>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <div className="flex items-center justify-center gap-1.5 text-sm text-white/50 tabular-nums">
-                        <Trophy className="h-3 w-3 text-white/20" />
+                      <div className="flex items-center justify-center gap-1.5 text-sm text-white tabular-nums">
+                        <Trophy className="h-3 w-3 text-white" />
                         {u._count.gameScores}
                       </div>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <div className="flex items-center justify-center gap-1.5 text-sm text-white/50 tabular-nums">
-                        <Award className="h-3 w-3 text-white/20" />
+                      <div className="flex items-center justify-center gap-1.5 text-sm text-white tabular-nums">
+                        <Award className="h-3 w-3 text-white" />
                         {u._count.achievements}
                       </div>
                     </td>
                     <td className="px-6 py-4 text-center">
                       <button
                         onClick={() => toggleActive(u)}
-                        className={`transition-colors ${u.isActive ? "text-emerald-400" : "text-white/20"}`}
+                        className={`transition-colors ${u.isActive ? "text-emerald-400" : "text-white"}`}
                       >
                         {u.isActive ? (
                           <ToggleRight className="h-5 w-5" />

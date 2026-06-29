@@ -109,7 +109,7 @@ export default function AdminMediaPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold text-white">Media Library</h1>
-            <p className="text-xs text-white/30 mt-1">
+            <p className="text-xs text-white mt-1">
               {media.length} file{media.length !== 1 ? "s" : ""}
             </p>
           </div>
@@ -161,7 +161,7 @@ export default function AdminMediaPage() {
             ))}
           </div>
         ) : media.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 text-white/20">
+          <div className="flex flex-col items-center justify-center py-20 text-white">
             <ImageIcon className="h-12 w-12 mb-4" />
             <p className="text-sm">No media uploaded yet</p>
             <p className="text-xs mt-1">Click Upload to add images</p>
@@ -205,17 +205,17 @@ export default function AdminMediaPage() {
                   </div>
                 </div>
                 <div className="p-3 space-y-1">
-                  <p className="text-[11px] text-white/60 truncate" title={item.alt}>
+                  <p className="text-[11px] text-white truncate" title={item.alt}>
                     {item.alt || "untitled"}
                   </p>
-                  <div className="flex items-center gap-2 text-[10px] text-white/30">
+                  <div className="flex items-center gap-2 text-[10px] text-white">
                     <span>{item.width}&times;{item.height}</span>
                     <span>&middot;</span>
                     <span>{item.format}</span>
                     <span>&middot;</span>
                     <span>{formatBytes(item.bytes)}</span>
                   </div>
-                  <p className="text-[10px] text-white/20">{formatDate(item.createdAt)}</p>
+                  <p className="text-[10px] text-white">{formatDate(item.createdAt)}</p>
                 </div>
               </div>
             ))}

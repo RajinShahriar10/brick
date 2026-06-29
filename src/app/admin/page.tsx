@@ -60,7 +60,7 @@ export default async function AdminDashboardPage() {
           <h2 className="text-sm font-semibold text-white mb-4">Recent Orders</h2>
           <div className="space-y-3">
             {stats.recentOrders.length === 0 ? (
-              <p className="text-xs text-white/30">No orders yet.</p>
+              <p className="text-xs text-white">No orders yet.</p>
             ) : (
               stats.recentOrders.map((order) => (
                 <div
@@ -68,12 +68,12 @@ export default async function AdminDashboardPage() {
                   className="flex items-center justify-between py-2 border-b border-white/5 last:border-0"
                 >
                   <div>
-                    <p className="text-sm text-white/80">{order.contactName}</p>
-                    <p className="text-[11px] text-white/30">{formatDate(new Date(order.createdAt))}</p>
+                    <p className="text-sm text-white">{order.contactName}</p>
+                    <p className="text-[11px] text-white">{formatDate(new Date(order.createdAt))}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-medium text-white">{formatPrice(order.total)}</p>
-                    <span className="text-[10px] uppercase text-white/30">{order.status.toLowerCase()}</span>
+                    <span className="text-[10px] uppercase text-white">{order.status.toLowerCase()}</span>
                   </div>
                 </div>
               ))

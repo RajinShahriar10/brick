@@ -68,7 +68,7 @@ export function PerformanceMetrics() {
               <h2 className="text-4xl sm:text-6xl font-bold text-white tracking-tight">
                 By the Numbers
               </h2>
-              <p className="mt-4 text-sm text-white/25 max-w-xl mx-auto leading-relaxed">
+              <p className="mt-4 text-sm text-white max-w-xl mx-auto leading-relaxed">
                 The reach of BRICK ÉLITE extends far beyond the kiln.
               </p>
             </div>
@@ -127,7 +127,7 @@ export function PerformanceMetrics() {
                     </div>
 
                     {/* Label */}
-                    <h3 className="text-sm font-semibold text-white/60 group-hover:text-white/80 transition-colors duration-500">
+                    <h3 className="text-sm font-semibold text-white group-hover:text-white transition-colors duration-500">
                       {metric.label}
                     </h3>
                   </div>
@@ -151,7 +151,7 @@ export function PerformanceMetrics() {
 
           {/* Error state */}
           {error && metrics === null && (
-            <p className="mt-8 text-center text-[10px] text-white/15 tracking-wide">
+            <p className="mt-8 text-center text-[10px] text-white tracking-wide">
               Could not load live metrics — showing default values.
             </p>
           )}
@@ -162,7 +162,7 @@ export function PerformanceMetrics() {
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              className="mt-8 text-center text-[10px] text-white/10 tracking-wide"
+              className="mt-8 text-center text-[10px] text-white tracking-wide"
             >
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500/50 mr-2 align-middle" />
               Live data from PostgreSQL

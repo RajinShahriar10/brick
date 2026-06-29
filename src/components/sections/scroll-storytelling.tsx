@@ -373,7 +373,7 @@ export function ScrollStorytelling() {
           style={{ opacity: heroOpacity, scale: heroScale, filter: heroBlurFilter as any }}
           className="text-center px-6"
         >
-          <p className="text-[10px] tracking-[0.4em] text-white/20 uppercase font-mono mb-6">
+          <p className="text-[10px] tracking-[0.4em] text-white uppercase font-mono mb-6">
             The Journey
           </p>
           <h1 className="text-5xl sm:text-7xl md:text-8xl font-bold text-white tracking-tight leading-[0.9]">
@@ -383,7 +383,7 @@ export function ScrollStorytelling() {
               to Icon
             </span>
           </h1>
-          <p className="mt-6 text-sm text-white/15 max-w-md mx-auto font-light tracking-wide">
+          <p className="mt-6 text-sm text-white max-w-md mx-auto font-light tracking-wide">
             Scroll to witness the four transformations of BRICK ÉLITE
           </p>
           <motion.div

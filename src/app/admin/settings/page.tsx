@@ -103,7 +103,7 @@ export default function AdminSettingsPage() {
           <div className="mb-8 rounded-xl border border-white/5 bg-white/[0.02] p-6 space-y-4">
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <label className="text-xs text-white/40 mb-2 block">Key</label>
+                <label className="text-xs text-white mb-2 block">Key</label>
                 <input
                   value={newKey}
                   onChange={(e) => setNewKey(e.target.value)}
@@ -112,7 +112,7 @@ export default function AdminSettingsPage() {
                 />
               </div>
               <div>
-                <label className="text-xs text-white/40 mb-2 block">Value</label>
+                <label className="text-xs text-white mb-2 block">Value</label>
                 <input
                   value={newValue}
                   onChange={(e) => setNewValue(e.target.value)}
@@ -121,7 +121,7 @@ export default function AdminSettingsPage() {
                 />
               </div>
               <div>
-                <label className="text-xs text-white/40 mb-2 block">Category</label>
+                <label className="text-xs text-white mb-2 block">Category</label>
                 <select
                   value={newCategory}
                   onChange={(e) => setNewCategory(e.target.value)}
@@ -143,7 +143,7 @@ export default function AdminSettingsPage() {
               </button>
               <button
                 onClick={() => setShowNew(false)}
-                className="px-4 py-2 text-xs text-white/30 hover:text-white/50 transition-colors"
+                className="px-4 py-2 text-xs text-white hover:text-white transition-colors"
               >
                 Cancel
               </button>
@@ -152,14 +152,14 @@ export default function AdminSettingsPage() {
         )}
 
         {loading ? (
-          <p className="text-xs text-white/20">Loading...</p>
+          <p className="text-xs text-white">Loading...</p>
         ) : Object.keys(grouped).length === 0 ? (
-          <p className="text-xs text-white/20">No settings defined yet.</p>
+          <p className="text-xs text-white">No settings defined yet.</p>
         ) : (
           <div className="space-y-8">
             {Object.entries(grouped).map(([category, items]) => (
               <div key={category}>
-                <h2 className="text-xs uppercase tracking-widest text-white/30 font-medium mb-4">
+                <h2 className="text-xs uppercase tracking-widest text-white font-medium mb-4">
                   {category}
                 </h2>
                 <div className="space-y-2">
@@ -169,7 +169,7 @@ export default function AdminSettingsPage() {
                       className="rounded-xl border border-white/5 bg-white/[0.02] px-5 py-3 flex items-center justify-between gap-4"
                     >
                       <div className="min-w-0 flex-1">
-                        <p className="text-xs font-mono text-white/50 mb-1">{s.key}</p>
+                        <p className="text-xs font-mono text-white mb-1">{s.key}</p>
                         {editing === s.id ? (
                           <div className="flex items-center gap-2">
                             <input
@@ -186,18 +186,18 @@ export default function AdminSettingsPage() {
                             </button>
                           </div>
                         ) : (
-                          <p className="text-sm text-white/80 font-mono truncate">{s.value}</p>
+                          <p className="text-sm text-white font-mono truncate">{s.value}</p>
                         )}
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
-                        <span className="text-[9px] uppercase text-white/20 bg-white/5 px-2 py-0.5 rounded">
+                        <span className="text-[9px] uppercase text-white bg-white/5 px-2 py-0.5 rounded">
                           {s.type}
                         </span>
                         <button
                           onClick={() => startEdit(s)}
                           className="p-1.5 rounded-lg hover:bg-white/5 transition-colors"
                         >
-                          <Edit3 className="h-3 w-3 text-white/30" />
+                          <Edit3 className="h-3 w-3 text-white" />
                         </button>
                         <button
                           onClick={() => handleDelete(s.id)}

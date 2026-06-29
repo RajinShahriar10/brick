@@ -47,7 +47,7 @@ export function ContactForm() {
             <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">
               Inquire Within
             </h2>
-            <p className="mt-4 text-sm sm:text-base text-white/30 max-w-lg mx-auto">
+            <p className="mt-4 text-sm sm:text-base text-white max-w-lg mx-auto">
               Serious inquiries only. Our concierge team responds within 24 hours.
             </p>
           </div>
@@ -62,7 +62,7 @@ export function ContactForm() {
             >
               <CheckCircle className="h-12 w-12 text-emerald-400 mx-auto mb-4" />
               <p className="text-lg font-medium text-white">Thank you</p>
-              <p className="text-sm text-white/40 mt-2">Your inquiry has been received.</p>
+              <p className="text-sm text-white mt-2">Your inquiry has been received.</p>
             </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">
@@ -72,7 +72,7 @@ export function ContactForm() {
               </div>
               <Input id="subject" name="subject" label="Subject" placeholder="What is this regarding?" required />
               <div className="space-y-1.5">
-                <label htmlFor="message" className="block text-xs font-medium tracking-wider uppercase text-white/40">
+                <label htmlFor="message" className="block text-xs font-medium tracking-wider uppercase text-white">
                   Message
                 </label>
                 <textarea
@@ -80,7 +80,7 @@ export function ContactForm() {
                   name="message"
                   rows={5}
                   required
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-red-600/50 focus:ring-1 focus:ring-red-600/20 transition-all duration-300 resize-none"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white focus:outline-none focus:border-red-600/50 focus:ring-1 focus:ring-red-600/20 transition-all duration-300 resize-none"
                   placeholder="Tell us about your interest in BRICK ÉLITE..."
                 />
               </div>

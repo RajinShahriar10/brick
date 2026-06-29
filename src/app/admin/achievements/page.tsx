@@ -113,7 +113,7 @@ export default function AdminAchievementsPage() {
           >
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-xs text-white/40 mb-2 block">Name</label>
+                <label className="text-xs text-white mb-2 block">Name</label>
                 <input
                   name="name"
                   defaultValue={editing?.name ?? ""}
@@ -122,7 +122,7 @@ export default function AdminAchievementsPage() {
                 />
               </div>
               <div>
-                <label className="text-xs text-white/40 mb-2 block">Slug</label>
+                <label className="text-xs text-white mb-2 block">Slug</label>
                 <input
                   name="slug"
                   defaultValue={editing?.slug ?? ""}
@@ -132,7 +132,7 @@ export default function AdminAchievementsPage() {
               </div>
             </div>
             <div>
-              <label className="text-xs text-white/40 mb-2 block">Description</label>
+              <label className="text-xs text-white mb-2 block">Description</label>
               <textarea
                 name="description"
                 defaultValue={editing?.description ?? ""}
@@ -143,7 +143,7 @@ export default function AdminAchievementsPage() {
             </div>
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <label className="text-xs text-white/40 mb-2 block">Icon</label>
+                <label className="text-xs text-white mb-2 block">Icon</label>
                 <input
                   name="icon"
                   defaultValue={editing?.icon ?? "trophy"}
@@ -151,7 +151,7 @@ export default function AdminAchievementsPage() {
                 />
               </div>
               <div>
-                <label className="text-xs text-white/40 mb-2 block">Category</label>
+                <label className="text-xs text-white mb-2 block">Category</label>
                 <select
                   name="category"
                   defaultValue={editing?.category ?? "SCORE"}
@@ -163,7 +163,7 @@ export default function AdminAchievementsPage() {
                 </select>
               </div>
               <div>
-                <label className="text-xs text-white/40 mb-2 block">Points</label>
+                <label className="text-xs text-white mb-2 block">Points</label>
                 <input
                   name="points"
                   type="number"
@@ -172,7 +172,7 @@ export default function AdminAchievementsPage() {
                 />
               </div>
             </div>
-            <label className="flex items-center gap-2 text-xs text-white/40 cursor-pointer">
+            <label className="flex items-center gap-2 text-xs text-white cursor-pointer">
               <input
                 name="isHidden"
                 type="checkbox"
@@ -191,7 +191,7 @@ export default function AdminAchievementsPage() {
               <button
                 type="button"
                 onClick={() => { setShowForm(false); setEditing(null); }}
-                className="px-4 py-2 text-xs text-white/30 hover:text-white/50 transition-colors"
+                className="px-4 py-2 text-xs text-white hover:text-white transition-colors"
               >
                 Cancel
               </button>
@@ -200,9 +200,9 @@ export default function AdminAchievementsPage() {
         )}
 
         {loading ? (
-          <p className="text-xs text-white/20">Loading...</p>
+          <p className="text-xs text-white">Loading...</p>
         ) : achievements.length === 0 ? (
-          <p className="text-xs text-white/20">No achievements defined yet.</p>
+          <p className="text-xs text-white">No achievements defined yet.</p>
         ) : (
           <div className="grid gap-4">
             {achievements.map((a) => (
@@ -220,15 +220,15 @@ export default function AdminAchievementsPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-1">
                         <h3 className="text-sm font-semibold text-white">{a.name}</h3>
-                        <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-white/5 text-white/30 border border-white/10">
+                        <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-white/5 text-white border border-white/10">
                           {a.category}
                         </span>
                         <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-amber-600/10 text-amber-400 border border-amber-600/20">
                           {a.points} pts
                         </span>
                       </div>
-                      <p className="text-xs text-white/50 mb-2">{a.description}</p>
-                      <p className="text-[10px] text-white/20">
+                      <p className="text-xs text-white mb-2">{a.description}</p>
+                      <p className="text-[10px] text-white">
                         {a._count.users} user{a._count.users !== 1 ? "s" : ""} unlocked &middot; slug: {a.slug}
                       </p>
                     </div>
@@ -238,7 +238,7 @@ export default function AdminAchievementsPage() {
                       onClick={() => { setEditing(a); setShowForm(true); }}
                       className="p-1.5 rounded-lg hover:bg-white/5 transition-colors"
                     >
-                      <Edit3 className="h-3.5 w-3.5 text-white/30" />
+                      <Edit3 className="h-3.5 w-3.5 text-white" />
                     </button>
                     <button
                       onClick={() => handleDelete(a.id)}

@@ -48,9 +48,9 @@ export default function AdminAnalyticsPage() {
         <h1 className="text-2xl font-bold text-white mb-8">Analytics</h1>
 
         {loading ? (
-          <p className="text-xs text-white/20">Loading...</p>
+          <p className="text-xs text-white">Loading...</p>
         ) : !data ? (
-          <p className="text-xs text-white/20">Failed to load analytics.</p>
+          <p className="text-xs text-white">Failed to load analytics.</p>
         ) : (
           <div className="space-y-8">
             {/* Stat cards */}
@@ -80,7 +80,7 @@ export default function AdminAnalyticsPage() {
                       </div>
                     </div>
                     {days.length <= 15 && (
-                      <p className="text-[8px] text-white/10 mt-1 text-center">
+                      <p className="text-[8px] text-white mt-1 text-center">
                         {day.slice(5)}
                       </p>
                     )}
@@ -102,8 +102,8 @@ export default function AdminAnalyticsPage() {
                     return (
                       <div key={s.status}>
                         <div className="flex justify-between text-xs mb-1.5">
-                          <span className="text-white/50">{s.status}</span>
-                          <span className="text-white/30 tabular-nums">{s.count}</span>
+                          <span className="text-white">{s.status}</span>
+                          <span className="text-white tabular-nums">{s.count}</span>
                         </div>
                         <div className="h-2 bg-white/5 rounded-full overflow-hidden">
                           <div
@@ -146,8 +146,8 @@ function StatCard({
   return (
     <div className="rounded-xl border border-white/5 bg-white/[0.02] p-5 backdrop-blur-xl">
       <div className="flex items-center justify-between mb-3">
-        <p className="text-[10px] uppercase tracking-widest text-white/40">{label}</p>
-        <Icon className="h-3.5 w-3.5 text-white/20" />
+        <p className="text-[10px] uppercase tracking-widest text-white">{label}</p>
+        <Icon className="h-3.5 w-3.5 text-white" />
       </div>
       <p className="text-xl font-bold text-white tabular-nums">{value}</p>
     </div>
@@ -157,8 +157,8 @@ function StatCard({
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
-      <span className="text-xs text-white/40">{label}</span>
-      <span className="text-xs font-medium text-white/80 tabular-nums">{value}</span>
+      <span className="text-xs text-white">{label}</span>
+      <span className="text-xs font-medium text-white tabular-nums">{value}</span>
     </div>
   );
 }

@@ -85,9 +85,9 @@ export default function AdminProductsPage() {
         <h1 className="text-2xl font-bold text-white mb-8">Products</h1>
 
         {loading ? (
-          <p className="text-xs text-white/20">Loading...</p>
+          <p className="text-xs text-white">Loading...</p>
         ) : products.length === 0 ? (
-          <p className="text-xs text-white/20">No products yet.</p>
+          <p className="text-xs text-white">No products yet.</p>
         ) : (
           <div className="space-y-4">
             {products.map((product) => (
@@ -115,7 +115,7 @@ export default function AdminProductsPage() {
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <Package className="h-5 w-5 text-white/20" />
+                          <Package className="h-5 w-5 text-white" />
                         </div>
                       )}
                     </div>
@@ -134,8 +134,8 @@ export default function AdminProductsPage() {
                           {product.isArchived ? "Archived" : "Active"}
                         </span>
                       </div>
-                      <p className="text-xs text-white/40 mb-2">{product.tagline}</p>
-                      <div className="flex items-center gap-4 text-xs text-white/30">
+                      <p className="text-xs text-white mb-2">{product.tagline}</p>
+                      <div className="flex items-center gap-4 text-xs text-white">
                         <span>{formatPrice(product.price)}</span>
                         <span>Stock: {product.stock}</span>
                       </div>
@@ -176,7 +176,7 @@ export default function AdminProductsPage() {
                     <button
                       onClick={() => fileRef.current?.click()}
                       disabled={uploading === product.id}
-                      className="flex items-center gap-2 px-3 py-2 text-[11px] font-medium bg-white/5 text-white/50 rounded-lg hover:bg-white/10 hover:text-white/70 transition-all disabled:opacity-30"
+                      className="flex items-center gap-2 px-3 py-2 text-[11px] font-medium bg-white/5 text-white rounded-lg hover:bg-white/10 hover:text-white transition-all disabled:opacity-30"
                     >
                       {uploading === product.id ? (
                         <RefreshCw className="h-3 w-3 animate-spin" />
@@ -187,7 +187,7 @@ export default function AdminProductsPage() {
                     </button>
                     <button
                       onClick={() => toggleArchive(product)}
-                      className="flex items-center gap-2 px-3 py-2 text-[11px] font-medium bg-white/5 text-white/50 rounded-lg hover:bg-white/10 hover:text-white/70 transition-all"
+                      className="flex items-center gap-2 px-3 py-2 text-[11px] font-medium bg-white/5 text-white rounded-lg hover:bg-white/10 hover:text-white transition-all"
                     >
                       <Archive className="h-3 w-3" />
                       {product.isArchived ? "Restore" : "Archive"}

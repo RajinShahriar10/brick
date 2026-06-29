@@ -27,10 +27,10 @@ function SpecCard({ spec, index }: { spec: typeof specs[0]; index: number }) {
         className="flex items-center justify-between px-6 sm:px-10 py-5 border-b border-white/[0.03] hover:bg-white/[0.02] transition-all duration-500 cursor-default"
       >
         <div className="flex items-center gap-4 min-w-0">
-          <span className="text-xs opacity-30 group-hover:opacity-60 transition-opacity duration-500 w-5 text-center flex-shrink-0">
+          <span className="text-xs opacity-100 group-hover:opacity-10 transition-opacity duration-500 w-5 text-center flex-shrink-0">
             {spec.icon}
           </span>
-          <span className="text-xs sm:text-sm font-medium text-white/40 tracking-wide group-hover:text-white/60 transition-colors duration-500 truncate">
+          <span className="text-xs sm:text-sm font-medium text-white tracking-wide transition-colors duration-500 truncate">
             {spec.label}
           </span>
         </div>
@@ -44,7 +44,7 @@ function SpecCard({ spec, index }: { spec: typeof specs[0]; index: number }) {
               delay: index * 0.04 + 0.2,
               ease: [0.25, 0.1, 0.25, 1],
             }}
-            className="text-xs sm:text-sm text-white/80 text-right font-light"
+            className="text-xs sm:text-sm text-white text-right font-light"
           >
             {spec.value}
           </motion.span>
@@ -65,7 +65,7 @@ export function LuxurySpecs() {
               <h2 className="text-4xl sm:text-6xl font-bold text-white tracking-tight">
                 By the Numbers
               </h2>
-              <p className="mt-4 text-sm text-white/25 max-w-xl mx-auto leading-relaxed">
+              <p className="mt-4 text-sm text-white max-w-xl mx-auto leading-relaxed">
                 We put a brick through more tests than most smartphones. 
                 The results are both impressive and slightly absurd.
               </p>
@@ -75,10 +75,10 @@ export function LuxurySpecs() {
           <ScrollReveal delay={0.2}>
             <div className="max-w-3xl mx-auto">
               <div className="flex items-center justify-between px-6 sm:px-10 py-3 border-b border-white/10">
-                <span className="text-[10px] uppercase tracking-[0.3em] text-white/20">
+                <span className="text-[10px] uppercase tracking-[0.3em] text-white">
                   Specification
                 </span>
-                <span className="text-[10px] uppercase tracking-[0.3em] text-white/20">
+                <span className="text-[10px] uppercase tracking-[0.3em] text-white">
                   Value
                 </span>
               </div>
@@ -101,7 +101,7 @@ export function LuxurySpecs() {
                 className="inline-flex items-center gap-4 px-8 py-4 rounded-full border border-white/5 bg-white/[0.02]"
               >
                 <span className="text-lg">🏆</span>
-                <span className="text-xs text-white/30 tracking-wide">
+                <span className="text-xs text-white tracking-wide">
                   Voted &ldquo;Most Likely to Outlive You&rdquo; — <em>Brick Monthly</em>
                 </span>
               </motion.div>

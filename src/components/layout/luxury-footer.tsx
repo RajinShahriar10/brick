@@ -39,9 +39,9 @@ export function LuxuryFooter() {
             <div className="md:col-span-2">
               <div className="mb-4">
                 <span className="text-xl font-bold tracking-[0.3em] text-white">BRICK</span>
-                <span className="text-[11px] font-light tracking-[0.3em] text-white/40 align-super">ÉLITE</span>
+                <span className="text-[11px] font-light tracking-[0.3em] text-white align-super">ÉLITE</span>
               </div>
-              <p className="text-sm text-white/25 max-w-sm leading-relaxed mb-6">
+              <p className="text-sm text-white max-w-sm leading-relaxed mb-6">
                 The world&apos;s most exclusive red brick. Precision-engineered in limited batches 
                 for the discerning collector. Not a building material. An heirloom.
               </p>
@@ -56,13 +56,13 @@ export function LuxuryFooter() {
             </div>
 
             <nav aria-label="Footer navigation">
-              <h4 className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/30 mb-6">Navigate</h4>
+              <h4 className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white mb-6">Navigate</h4>
               <ul className="space-y-3">
                 {links.slice(0, 4).map((link) => (
                   <li key={link.title}>
                     <a
                       href={link.href}
-                      className="text-sm text-white/40 hover:text-white transition-colors duration-300"
+                      className="text-sm text-white hover:text-white transition-colors duration-300"
                     >
                       {link.title}
                     </a>
@@ -72,13 +72,13 @@ export function LuxuryFooter() {
             </nav>
 
             <nav aria-label="Social media links">
-              <h4 className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/30 mb-6">Connect</h4>
+              <h4 className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white mb-6">Connect</h4>
               <ul className="space-y-3">
                 {social.map((s) => (
                   <li key={s.name}>
                     <a
                       href={s.href}
-                      className="text-sm text-white/40 hover:text-white transition-colors duration-300 inline-flex items-center gap-1 group"
+                      className="text-sm text-white hover:text-white transition-colors duration-300 inline-flex items-center gap-1 group"
                       aria-label={`Follow us on ${s.name}`}
                     >
                       {s.name}
@@ -92,15 +92,15 @@ export function LuxuryFooter() {
 
           <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-4">
-              <p className="text-[10px] text-white/15">
+              <p className="text-[10px] text-white">
                 &copy; {new Date().getFullYear()} BRICK ÉLITE. All rights reserved.
               </p>
-              <span className="text-[10px] text-white/5" aria-hidden="true">·</span>
-              <a href="#" className="text-[10px] text-white/15 hover:text-white/30 transition-colors">Privacy</a>
-              <span className="text-[10px] text-white/5" aria-hidden="true">·</span>
-              <a href="#" className="text-[10px] text-white/15 hover:text-white/30 transition-colors">Terms</a>
+              <span className="text-[10px] text-white" aria-hidden="true">·</span>
+              <a href="#" className="text-[10px] text-white hover:text-white transition-colors">Privacy</a>
+              <span className="text-[10px] text-white" aria-hidden="true">·</span>
+              <a href="#" className="text-[10px] text-white hover:text-white transition-colors">Terms</a>
             </div>
-            <p className="text-[9px] text-white/10 tracking-[0.3em] uppercase">
+            <p className="text-[9px] text-white tracking-[0.3em] uppercase">
               Not a building material. An heirloom.
             </p>
           </div>

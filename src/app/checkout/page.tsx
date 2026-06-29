@@ -194,7 +194,7 @@ export default function CheckoutPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-sm text-white/40 mb-2"
+            className="text-sm text-white mb-2"
           >
             Your BRICK ÉLITE{quantity > 1 ? ` ×${quantity}` : ""} is being prepared.
           </motion.p>
@@ -203,7 +203,7 @@ export default function CheckoutPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="text-xs text-white/20 mb-8"
+            className="text-xs text-white mb-8"
           >
             A confirmation email will arrive shortly.
           </motion.p>
@@ -214,8 +214,8 @@ export default function CheckoutPage() {
             transition={{ delay: 0.6 }}
             className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-white/5 bg-white/[0.02] backdrop-blur-xl mb-8"
           >
-            <Package className="h-4 w-4 text-white/30" />
-            <span className="text-xs text-white/40">
+            <Package className="h-4 w-4 text-white" />
+            <span className="text-xs text-white">
               Order #{Math.random().toString(36).slice(2, 8).toUpperCase()}
             </span>
           </motion.div>
@@ -258,7 +258,7 @@ export default function CheckoutPage() {
                 className="w-16 h-16 mx-auto mb-6 rounded-full border-2 border-transparent border-t-red-500 border-r-red-500"
               />
               <p className="text-lg font-medium text-white mb-1">Processing Payment</p>
-              <p className="text-sm text-white/30">Please do not close this page</p>
+              <p className="text-sm text-white">Please do not close this page</p>
             </motion.div>
           </motion.div>
         )}
@@ -269,7 +269,7 @@ export default function CheckoutPage() {
           onClick={() =>
             step === 0 ? router.back() : setStep((s) => s - 1)
           }
-          className="flex items-center gap-2 text-xs text-white/30 hover:text-white/60 transition-colors mb-12 group"
+          className="flex items-center gap-2 text-xs text-white hover:text-white transition-colors mb-12 group"
         >
           <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" />
           {step === 0 ? "Back" : "Previous step"}
@@ -293,7 +293,7 @@ export default function CheckoutPage() {
                         ? "bg-red-600/20 text-red-400 border border-red-600/30"
                         : i < step
                         ? "bg-emerald-600/10 text-emerald-400"
-                        : "bg-white/5 text-white/20"
+                        : "bg-white/5 text-white"
                     }`}
                   >
                     <span>{i + 1}</span>
@@ -424,30 +424,30 @@ export default function CheckoutPage() {
 
                       <div className="relative z-10 p-6 flex flex-col justify-between h-full">
                         <div className="flex items-center justify-between">
-                          <span className="text-[10px] uppercase tracking-widest text-white/20">
+                          <span className="text-[10px] uppercase tracking-widest text-white">
                             {brandInfo?.label ?? "Payment Card"}
                           </span>
-                          <Lock className="h-3.5 w-3.5 text-white/20" />
+                          <Lock className="h-3.5 w-3.5 text-white" />
                         </div>
 
                         <div>
-                          <p className="text-lg tracking-[0.3em] font-mono text-white/60 mb-3">
+                          <p className="text-lg tracking-[0.3em] font-mono text-white mb-3">
                             {card.number || "•••• •••• •••• ••••"}
                           </p>
                           <div className="flex items-center gap-8">
                             <div>
-                              <p className="text-[8px] uppercase tracking-wider text-white/20 mb-0.5">
+                              <p className="text-[8px] uppercase tracking-wider text-white mb-0.5">
                                 Expires
                               </p>
-                              <p className="text-sm font-mono text-white/40">
+                              <p className="text-sm font-mono text-white">
                                 {card.expiry || "MM/YY"}
                               </p>
                             </div>
                             <div>
-                              <p className="text-[8px] uppercase tracking-wider text-white/20 mb-0.5">
+                              <p className="text-[8px] uppercase tracking-wider text-white mb-0.5">
                                 CVC
                               </p>
-                              <p className="text-sm font-mono text-white/40">
+                              <p className="text-sm font-mono text-white">
                                 {card.cvc || "•••"}
                               </p>
                             </div>
@@ -458,7 +458,7 @@ export default function CheckoutPage() {
 
                     <div className="space-y-4 max-w-sm mx-auto">
                       <div>
-                        <label className="text-xs text-white/40 mb-2 block tracking-wide">
+                        <label className="text-xs text-white mb-2 block tracking-wide">
                           Card Number
                         </label>
                         <input
@@ -474,7 +474,7 @@ export default function CheckoutPage() {
 
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="text-xs text-white/40 mb-2 block tracking-wide">
+                          <label className="text-xs text-white mb-2 block tracking-wide">
                             Expiry
                           </label>
                           <input
@@ -488,7 +488,7 @@ export default function CheckoutPage() {
                           />
                         </div>
                         <div>
-                          <label className="text-xs text-white/40 mb-2 block tracking-wide">
+                          <label className="text-xs text-white mb-2 block tracking-wide">
                             CVC
                           </label>
                           <input
@@ -512,7 +512,7 @@ export default function CheckoutPage() {
                       Pay {formatPrice(total)}
                     </MagneticButton>
 
-                    <p className="text-[10px] text-white/15 text-center max-w-sm mx-auto">
+                    <p className="text-[10px] text-white text-center max-w-sm mx-auto">
                       This is a simulated payment. No real charges will be made.
                     </p>
                   </motion.div>
@@ -529,44 +529,44 @@ export default function CheckoutPage() {
                     className="space-y-6"
                   >
                     <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6 backdrop-blur-xl">
-                      <h3 className="text-xs font-semibold uppercase tracking-wider text-white/40 mb-3 flex items-center gap-2">
+                      <h3 className="text-xs font-semibold uppercase tracking-wider text-white mb-3 flex items-center gap-2">
                         <ShoppingBag className="h-3 w-3" /> Contact
                       </h3>
-                      <p className="text-sm text-white/80">{form.name}</p>
-                      <p className="text-sm text-white/40">{form.email}</p>
+                      <p className="text-sm text-white">{form.name}</p>
+                      <p className="text-sm text-white">{form.email}</p>
                     </div>
 
                     <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6 backdrop-blur-xl">
-                      <h3 className="text-xs font-semibold uppercase tracking-wider text-white/40 mb-3 flex items-center gap-2">
+                      <h3 className="text-xs font-semibold uppercase tracking-wider text-white mb-3 flex items-center gap-2">
                         <Truck className="h-3 w-3" /> Ship to
                       </h3>
-                      <p className="text-sm text-white/80">{form.address}</p>
-                      <p className="text-sm text-white/40">
+                      <p className="text-sm text-white">{form.address}</p>
+                      <p className="text-sm text-white">
                         {form.city}, {form.zip}
                       </p>
-                      <p className="text-sm text-white/40">{form.country}</p>
+                      <p className="text-sm text-white">{form.country}</p>
                     </div>
 
                     <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6 backdrop-blur-xl">
-                      <h3 className="text-xs font-semibold uppercase tracking-wider text-white/40 mb-3 flex items-center gap-2">
+                      <h3 className="text-xs font-semibold uppercase tracking-wider text-white mb-3 flex items-center gap-2">
                         <CreditCard className="h-3 w-3" /> Payment
                       </h3>
-                      <p className="text-sm text-white/80 font-mono tracking-wider">
+                      <p className="text-sm text-white font-mono tracking-wider">
                         {brandInfo?.label ?? "Card"} ending in{" "}
                         {card.number.replace(/\s/g, "").slice(-4) || "••••"}
                       </p>
                     </div>
 
                     <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6 backdrop-blur-xl">
-                      <h3 className="text-xs font-semibold uppercase tracking-wider text-white/40 mb-3 flex items-center gap-2">
+                      <h3 className="text-xs font-semibold uppercase tracking-wider text-white mb-3 flex items-center gap-2">
                         <Package className="h-3 w-3" /> Items
                       </h3>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-6 bg-gradient-to-b from-red-500 to-red-700 rounded shadow-lg" />
                           <div>
-                            <p className="text-sm text-white/80">BRICK ÉLITE™ Original</p>
-                            <p className="text-[10px] text-white/30">Qty: {quantity}</p>
+                            <p className="text-sm text-white">BRICK ÉLITE™ Original</p>
+                            <p className="text-[10px] text-white">Qty: {quantity}</p>
                           </div>
                         </div>
                         <p className="text-sm font-medium text-white">
@@ -575,7 +575,7 @@ export default function CheckoutPage() {
                       </div>
                     </div>
 
-                    <div className="pt-2 flex items-center gap-3 text-sm text-white/40">
+                    <div className="pt-2 flex items-center gap-3 text-sm text-white">
                       <Shield className="h-4 w-4" />
                       <span>100-year warranty included</span>
                     </div>
@@ -598,7 +598,7 @@ export default function CheckoutPage() {
           {/* Sidebar */}
           <div className="lg:col-span-2">
             <div className="sticky top-24 rounded-2xl border border-white/5 bg-white/[0.02] p-6 backdrop-blur-xl">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-white/40 mb-4">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-white mb-4">
                 Order Summary
               </h3>
 
@@ -606,14 +606,14 @@ export default function CheckoutPage() {
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-8 bg-gradient-to-b from-red-500 to-red-700 rounded shadow-lg shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-white/80 truncate">BRICK ÉLITE™ Original</p>
-                    <p className="text-[10px] text-white/30">{formatPrice(UNIT_PRICE)} each</p>
+                    <p className="text-sm text-white truncate">BRICK ÉLITE™ Original</p>
+                    <p className="text-[10px] text-white">{formatPrice(UNIT_PRICE)} each</p>
                   </div>
                 </div>
 
                 {/* Quantity selector */}
                 <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/[0.03]">
-                  <span className="text-xs text-white/30">Quantity</span>
+                  <span className="text-xs text-white">Quantity</span>
                   <div className="flex items-center gap-3">
                     <button
                       type="button"
@@ -621,7 +621,7 @@ export default function CheckoutPage() {
                       disabled={step >= 3}
                       className="w-7 h-7 rounded-full border border-white/10 flex items-center justify-center hover:bg-white/[0.04] hover:border-white/20 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                     >
-                      <Minus className="h-3 w-3 text-white/40" />
+                      <Minus className="h-3 w-3 text-white" />
                     </button>
                     <span className="text-sm font-medium text-white tabular-nums w-5 text-center">
                       {quantity}
@@ -632,22 +632,22 @@ export default function CheckoutPage() {
                       disabled={step >= 3}
                       className="w-7 h-7 rounded-full border border-white/10 flex items-center justify-center hover:bg-white/[0.04] hover:border-white/20 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                     >
-                      <Plus className="h-3 w-3 text-white/40" />
+                      <Plus className="h-3 w-3 text-white" />
                     </button>
                   </div>
                 </div>
               </div>
 
               <div className="mt-4 space-y-2">
-                <div className="flex justify-between text-xs text-white/30">
+                <div className="flex justify-between text-xs text-white">
                   <span>Subtotal</span>
-                  <span className="text-white/60">{formatPrice(total)}</span>
+                  <span className="text-white">{formatPrice(total)}</span>
                 </div>
-                <div className="flex justify-between text-xs text-white/30">
+                <div className="flex justify-between text-xs text-white">
                   <span>Shipping</span>
                   <span className="text-emerald-400">Free</span>
                 </div>
-                <div className="flex justify-between text-xs text-white/30">
+                <div className="flex justify-between text-xs text-white">
                   <span>Tax</span>
                   <span>Calculated at shipment</span>
                 </div>
@@ -660,7 +660,7 @@ export default function CheckoutPage() {
                 </span>
               </div>
 
-              <div className="mt-6 flex items-center gap-2 justify-center text-[10px] text-white/20">
+              <div className="mt-6 flex items-center gap-2 justify-center text-[10px] text-white">
                 <Lock className="h-3 w-3" />
                 <span>Secure checkout · 30-day guarantee</span>
               </div>

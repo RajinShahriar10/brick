@@ -113,7 +113,7 @@ export function StorySection() {
                   >
                     <span className="text-[10px] tracking-[0.3em] text-red-500/60 uppercase font-mono">{item.year}</span>
                     <h3 className="text-2xl sm:text-3xl font-bold text-white mt-2 mb-4">{item.title}</h3>
-                    <p className="text-sm text-white/30 leading-relaxed">{item.description}</p>
+                    <p className="text-sm text-white leading-relaxed">{item.description}</p>
                   </motion.div>
                 </div>
 
@@ -128,7 +128,7 @@ export function StorySection() {
                     <p className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20">
                       {item.stat}
                     </p>
-                    <p className="text-xs text-white/20 mt-1 tracking-wider">{item.statLabel}</p>
+                    <p className="text-xs text-white mt-1 tracking-wider">{item.statLabel}</p>
                   </motion.div>
                 </div>
               </motion.div>

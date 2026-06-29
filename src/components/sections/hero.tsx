@@ -151,7 +151,7 @@ function HeroContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1.8, ease: [0.25, 0.1, 0.25, 1] }}
-          className="mt-6 text-base sm:text-lg md:text-xl text-white/30 max-w-2xl mx-auto font-light tracking-wide leading-relaxed"
+          className="mt-6 text-base sm:text-lg md:text-xl text-white max-w-2xl mx-auto font-light tracking-wide leading-relaxed"
         >
           Forged from the finest clay. Admired by visionaries. Desired by collectors.
         </motion.p>
@@ -161,7 +161,7 @@ function HeroContent() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 2.2 }}
-          className="mt-6 text-3xl sm:text-4xl font-bold text-white/90"
+          className="mt-6 text-3xl sm:text-4xl font-bold text-white"
         >
           {formatPrice(price)}
         </motion.p>
@@ -169,7 +169,7 @@ function HeroContent() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 2.3 }}
-          className="text-xs text-white/20 mt-1"
+          className="text-xs text-white mt-1"
         >
           Complimentary worldwide shipping
         </motion.p>
@@ -202,7 +202,7 @@ function HeroContent() {
           className="absolute -bottom-32 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3"
         >
           <motion.span
-            className="text-[8px] tracking-[0.3em] text-white/10 uppercase"
+            className="text-[8px] tracking-[0.3em] text-white uppercase"
             animate={{ opacity: [0.1, 0.3, 0.1] }}
             transition={{ duration: 3, repeat: Infinity }}
           >
@@ -212,7 +212,7 @@ function HeroContent() {
             animate={{ y: [0, 6, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           >
-            <ChevronDown className="h-4 w-4 text-white/10" />
+            <ChevronDown className="h-4 w-4 text-white" />
           </motion.div>
         </motion.div>
       </motion.div>

@@ -138,7 +138,7 @@ export default function AdminTestimonialsPage() {
             className="mb-8 rounded-xl border border-white/5 bg-white/[0.02] p-6 space-y-4"
           >
             <div>
-              <label className="text-xs text-white/40 mb-2 block">Content</label>
+              <label className="text-xs text-white mb-2 block">Content</label>
               <textarea
                 name="content"
                 defaultValue={editing?.content ?? ""}
@@ -149,7 +149,7 @@ export default function AdminTestimonialsPage() {
               />
             </div>
             <div>
-              <label className="text-xs text-white/40 mb-2 block">Author</label>
+              <label className="text-xs text-white mb-2 block">Author</label>
               <input
                 name="author"
                 defaultValue={editing?.author ?? ""}
@@ -160,7 +160,7 @@ export default function AdminTestimonialsPage() {
             </div>
             {editing?.avatar && (
               <div>
-                <label className="text-xs text-white/40 mb-2 block">Avatar</label>
+                <label className="text-xs text-white mb-2 block">Avatar</label>
                 <div className="flex items-center gap-3">
                   <CloudinaryImage
                     src={editing.avatar}
@@ -176,7 +176,7 @@ export default function AdminTestimonialsPage() {
                     type="button"
                     onClick={() => fileRef.current?.click()}
                     disabled={uploading}
-                    className="text-[11px] text-white/40 hover:text-white/60 transition-colors"
+                    className="text-[11px] text-white hover:text-white transition-colors"
                   >
                     {uploading ? "Uploading..." : "Change"}
                   </button>
@@ -196,7 +196,7 @@ export default function AdminTestimonialsPage() {
                   setShowForm(false);
                   setEditing(null);
                 }}
-                className="px-4 py-2 text-xs text-white/30 hover:text-white/50 transition-colors"
+                className="px-4 py-2 text-xs text-white hover:text-white transition-colors"
               >
                 Cancel
               </button>
@@ -205,19 +205,19 @@ export default function AdminTestimonialsPage() {
         )}
 
         {loading ? (
-          <p className="text-xs text-white/20">Loading...</p>
+          <p className="text-xs text-white">Loading...</p>
         ) : testimonials.length === 0 ? (
-          <p className="text-xs text-white/20">No testimonials yet.</p>
+          <p className="text-xs text-white">No testimonials yet.</p>
         ) : (
           <div className="rounded-xl border border-white/5 bg-white/[0.02] overflow-hidden">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-white/5">
                   <th className="w-8 px-4 py-4" />
-                  <th className="text-left px-4 py-4 text-[11px] uppercase tracking-widest text-white/40 font-medium">
+                  <th className="text-left px-4 py-4 text-[11px] uppercase tracking-widest text-white font-medium">
                     Content
                   </th>
-                  <th className="text-left px-4 py-4 text-[11px] uppercase tracking-widest text-white/40 font-medium">
+                  <th className="text-left px-4 py-4 text-[11px] uppercase tracking-widest text-white font-medium">
                     Author
                   </th>
                   <th className="w-28 px-4 py-4" />
@@ -232,10 +232,10 @@ export default function AdminTestimonialsPage() {
                     }`}
                   >
                     <td className="px-4 py-4">
-                      <GripVertical className="h-3.5 w-3.5 text-white/10" />
+                      <GripVertical className="h-3.5 w-3.5 text-white" />
                     </td>
                     <td className="px-4 py-4">
-                      <p className="text-sm text-white/80 line-clamp-2">{t.content}</p>
+                      <p className="text-sm text-white line-clamp-2">{t.content}</p>
                     </td>
                     <td className="px-4 py-4">
                       <div className="flex items-center gap-3">
@@ -253,7 +253,7 @@ export default function AdminTestimonialsPage() {
                         ) : (
                           <div className="w-6 h-6 rounded-full bg-white/5 flex-shrink-0" />
                         )}
-                        <span className="text-sm text-white/50">{t.author}</span>
+                        <span className="text-sm text-white">{t.author}</span>
                       </div>
                     </td>
                     <td className="px-4 py-4">
@@ -266,7 +266,7 @@ export default function AdminTestimonialsPage() {
                           className="p-1.5 rounded-lg hover:bg-white/5 transition-colors"
                           title="Edit"
                         >
-                          <Upload className="h-3.5 w-3.5 text-white/30" />
+                          <Upload className="h-3.5 w-3.5 text-white" />
                         </button>
                         <button
                           onClick={() => toggleVisibility(t)}
@@ -274,9 +274,9 @@ export default function AdminTestimonialsPage() {
                           title={t.isVisible ? "Hide" : "Show"}
                         >
                           {t.isVisible ? (
-                            <Eye className="h-3.5 w-3.5 text-white/30" />
+                            <Eye className="h-3.5 w-3.5 text-white" />
                           ) : (
-                            <EyeOff className="h-3.5 w-3.5 text-white/20" />
+                            <EyeOff className="h-3.5 w-3.5 text-white" />
                           )}
                         </button>
                         <button
