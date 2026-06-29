@@ -1,0 +1,328 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── NextAuth ───────────────────────────────────────────────────────────────
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─── Users ──────────────────────────────────────────────────────────────────
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role      @default(USER)
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts     Account[]
+  sessions     Session[]
+  orders       Order[]
+  gameScores   GameScore[]
+  achievements UserAchievement[]
+}
+
+// ─── Products ───────────────────────────────────────────────────────────────
+
+enum ProductCategory {
+  BRICK
+  MORTAR
+  TOOL
+  ACCESSORY
+  COLLECTION
+}
+
+model Product {
+  id             String          @id @default(cuid())
+  name           String
+  slug           String          @unique
+  tagline        String
+  description    String          @db.Text
+  category       ProductCategory @default(BRICK)
+  price          Float
+  compareAtPrice Float?
+  costPrice      Float?
+  images         String[]
+  features       String[]
+  specs          Json            @default("{}")
+  stock          Int             @default(0)
+  sku            String?
+  weight         Float?
+  isFeatured     Boolean         @default(false)
+  isArchived     Boolean         @default(false)
+  metaTitle      String?
+  metaDesc       String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  orderItems OrderItem[]
+
+  @@index([category])
+  @@index([isFeatured])
+  @@index([isArchived])
+}
+
+// ─── Orders ─────────────────────────────────────────────────────────────────
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum ShippingMethod {
+  STANDARD
+  EXPRESS
+  OVERNIGHT
+  WHITE_GLOVE
+}
+
+model Order {
+  id              String        @id @default(cuid())
+  orderNumber     String        @unique
+  userId          String?
+  items           Json          // Legacy — prefer orderItems relation below
+  subtotal        Float         @default(0)
+  shipping        Float         @default(0)
+  tax             Float         @default(0)
+  total           Float
+  status          OrderStatus   @default(PENDING)
+  shippingMethod  ShippingMethod @default(STANDARD)
+  shippingAddress Json?
+  billingAddress  Json?
+  contactEmail    String
+  contactName     String
+  contactPhone    String?
+  notes           String?
+  couponCode      String?
+  discountAmount  Float         @default(0)
+  paidAt          DateTime?
+  shippedAt       DateTime?
+  deliveredAt     DateTime?
+  cancelledAt     DateTime?
+  cancelReason    String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  user       User?       @relation(fields: [userId], references: [id])
+  orderItems OrderItem[]
+
+  @@index([status])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  productId String
+  name      String
+  price     Float
+  quantity  Int      @default(1)
+  image     String?
+  options   Json?    // e.g. color, size selections
+  createdAt DateTime @default(now())
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+// ─── Testimonials ───────────────────────────────────────────────────────────
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  content   String
+  author    String
+  title     String?
+  avatar    String?
+  rating    Int      @default(5)
+  order     Int      @default(0)
+  isVisible Boolean  @default(true)
+  featured  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isVisible])
+  @@index([featured])
+}
+
+// ─── Leaderboard (Game Scores) ──────────────────────────────────────────────
+
+model GameScore {
+  id            String   @id @default(cuid())
+  userId        String?
+  playerName    String
+  score         Int
+  combo         Int      @default(0)
+  perfectStacks Int      @default(0)
+  totalStacks   Int      @default(0)
+  level         Int      @default(1)
+  duration      Int?     // seconds played
+  createdAt     DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([score(sort: Desc)])
+  @@index([userId])
+}
+
+// ─── Achievements ───────────────────────────────────────────────────────────
+
+enum AchievementCategory {
+  SCORE
+  COMBO
+  PERFECT
+  STREAK
+  COLLECTOR
+  SPECIAL
+}
+
+model Achievement {
+  id          String              @id @default(cuid())
+  name        String
+  slug        String              @unique
+  description String
+  icon        String              @default("trophy")
+  category    AchievementCategory @default(SCORE)
+  criteria    Json                @default("{}")
+  points      Int                 @default(0)
+  sortOrder   Int                 @default(0)
+  isHidden    Boolean             @default(false)
+  createdAt   DateTime            @default(now())
+
+  users UserAchievement[]
+
+  @@index([category])
+  @@index([sortOrder])
+}
+
+model UserAchievement {
+  userId        String
+  achievementId String
+  unlockedAt    DateTime @default(now())
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@id([userId, achievementId])
+  @@index([userId])
+  @@index([achievementId])
+}
+
+// ─── Admin Settings ─────────────────────────────────────────────────────────
+
+model AdminSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  type      String   @default("string") // string, number, boolean, json
+  label     String?
+  category  String   @default("general")
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+}
+
+// ─── Contact ────────────────────────────────────────────────────────────────
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String   @db.Text
+  isRead    Boolean  @default(false)
+  repliedAt DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([isRead])
+}
+
+// ─── Site Metrics ───────────────────────────────────────────────────────────
+
+model Metric {
+  id     String @id @default(cuid())
+  key    String @unique
+  value  Int
+  label  String
+  suffix String @default("")
+  order  Int    @default(0)
+
+  @@index([order])
+}
+
+// ─── Media Library ──────────────────────────────────────────────────────────
+
+model Media {
+  id        String   @id @default(cuid())
+  url       String
+  publicId  String   @unique
+  alt       String   @default("")
+  width     Int
+  height    Int
+  format    String
+  bytes     Int
+  folder    String   @default("brick-elite")
+  category  String   @default("general")
+  tags      String[] @default([])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+  @@index([folder])
+}
