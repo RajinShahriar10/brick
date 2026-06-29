@@ -6,7 +6,6 @@ import {
   Environment,
   ContactShadows,
   OrbitControls,
-  Loader,
 } from "@react-three/drei";
 import {
   EffectComposer,
@@ -21,14 +20,18 @@ import * as THREE from "three";
 function CameraController({ inspecting }: { inspecting: boolean }) {
   const { camera } = useThree();
   const targetPos = useRef(new THREE.Vector3(0, 0, 4.2));
-  const targetLook = useRef(new THREE.Vector3(0, 0, 0));
 
   useEffect(() => {
-    if (inspecting) {
-      targetPos.current.set(0, 0.2, 2.8);
-    } else {
-      targetPos.current.set(0, 0, 4.2);
+    function update() {
+      const w = window.innerWidth;
+      const inspectingDist = w < 640 ? 2.2 : 2.8;
+      const defaultDist = w < 640 ? 5.5 : w < 1024 ? 4.8 : 4.2;
+      const dist = inspecting ? inspectingDist : defaultDist;
+      targetPos.current.set(0, 0, dist);
     }
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
   }, [inspecting]);
 
   useFrame(() => {
