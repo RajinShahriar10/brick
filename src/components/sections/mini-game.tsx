@@ -11,8 +11,10 @@ const STACK_WIDTH = 280;
 const AREA_HEIGHT = 480;
 const BRICK_HEIGHT = 32;
 const PERFECT_THRESHOLD = 4;
-const BASE_SPEED = 1.8;
-const SPEED_INCREMENT = 0.015;
+const BASE_SPEED = 2;
+const SPEED_INCREMENT = 0.02;
+const MAX_SPEED = 6;
+const BONUS_INTERVAL = 8;
 
 interface FloatingText {
   id: number;
@@ -20,6 +22,7 @@ interface FloatingText {
   x: number;
   y: number;
   color: string;
+  size?: number;
 }
 
 interface Achievement {
@@ -43,6 +46,17 @@ interface StackBrick {
   x: number;
   y: number;
   perfect: boolean;
+  bonus?: boolean;
+}
+
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  life: number;
+  size: number;
+  color: string;
 }
 
 function ConfettiCanvas() {
@@ -57,17 +71,17 @@ function ConfettiCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const particles = Array.from({ length: 120 }, () => ({
+    const particles = Array.from({ length: 160 }, () => ({
       x: Math.random() * canvas.width,
       y: -20,
-      vx: (Math.random() - 0.5) * 6,
-      vy: Math.random() * 4 + 2,
-      size: Math.random() * 6 + 2,
-      color: ["#FF6B35", "#FFD700", "#FF4400", "#FF8C00", "#FF4500"][
-        Math.floor(Math.random() * 5)
+      vx: (Math.random() - 0.5) * 7,
+      vy: Math.random() * 5 + 3,
+      size: Math.random() * 7 + 2,
+      color: ["#FF6B35", "#FFD700", "#FF4400", "#FF8C00", "#FF4500", "#FFA500"][
+        Math.floor(Math.random() * 6)
       ],
       rotation: Math.random() * 360,
-      rotSpeed: (Math.random() - 0.5) * 8,
+      rotSpeed: (Math.random() - 0.5) * 10,
     }));
 
     let running = true;
@@ -121,18 +135,83 @@ function ConfettiCanvas() {
   );
 }
 
-function ScorePopup({ text, x, y, color, onDone }: FloatingText & { onDone: () => void }) {
+function BrickParticles({ x, y, count, perfect }: { x: number; y: number; count: number; perfect: boolean }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    canvas.width = 100;
+    canvas.height = 80;
+
+    const particles: Particle[] = Array.from({ length: count }, () => ({
+      x: 50,
+      y: 40,
+      vx: (Math.random() - 0.5) * (perfect ? 3 : 6),
+      vy: -Math.random() * (perfect ? 3 : 5) - 1,
+      life: 1,
+      size: Math.random() * 4 + 2,
+      color: perfect
+        ? ["#FFD700", "#FFA500", "#FF8C00"][Math.floor(Math.random() * 3)]
+        : ["#B84A28", "#8B3A20", "#6B2810"][Math.floor(Math.random() * 3)],
+    }));
+
+    let running = true;
+
+    const animate = () => {
+      if (!running) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach((p) => {
+        p.x += p.vx;
+        p.vy += 0.15;
+        p.y += p.vy;
+        p.life -= 0.02;
+
+        if (p.life <= 0) return;
+        ctx.globalAlpha = p.life;
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = perfect ? "#FFD700" : "#B84A28";
+        ctx.shadowBlur = perfect ? 8 : 3;
+        ctx.fillRect(p.x - p.size / 2, p.y - p.size / 2, p.size, p.size);
+      });
+
+      ctx.shadowBlur = 0;
+      requestAnimationFrame(animate);
+    };
+
+    requestAnimationFrame(animate);
+    const timer = setTimeout(() => { running = false; }, 800);
+    return () => { running = false; clearTimeout(timer); };
+  }, [count, perfect]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute pointer-events-none z-20"
+      style={{ left: x - 50, top: y - 40, width: 100, height: 80 }}
+    />
+  );
+}
+
+function ScorePopup({ text, x, y, color, size, onDone }: FloatingText & { onDone: () => void }) {
   return (
     <motion.div
       initial={{ opacity: 1, y: 0, scale: 0.5 }}
-      animate={{ opacity: 0, y: -60, scale: 1.2 }}
+      animate={{ opacity: 0, y: -70, scale: 1.3 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 1, ease: "easeOut" }}
+      transition={{ duration: 1.2, ease: "easeOut" }}
       onAnimationComplete={onDone}
       className="absolute pointer-events-none z-30"
       style={{ left: x, top: y }}
     >
-      <span className="text-lg font-bold tabular-nums" style={{ color }}>
+      <span
+        className="font-bold tabular-nums drop-shadow-lg"
+        style={{ fontSize: size ?? 16, color }}
+      >
         {text}
       </span>
     </motion.div>
@@ -159,6 +238,8 @@ export function MiniGame() {
     { id: "perfect10", label: "Perfect 10", unlocked: false },
     { id: "combo5", label: "Combo King", unlocked: false },
     { id: "speed", label: "Speed Demon", unlocked: false },
+    { id: "score250", label: "Century Mark", unlocked: false },
+    { id: "master", label: "Master Builder", unlocked: false },
   ]);
   const [newAchievement, setNewAchievement] = useState<string | null>(null);
 
@@ -171,30 +252,47 @@ export function MiniGame() {
   const [currentWidth, setCurrentWidth] = useState(STACK_WIDTH - 20);
   const [canDrop, setCanDrop] = useState(true);
   const [gameSpeed, setGameSpeed] = useState(BASE_SPEED);
+  const [shakeX, setShakeX] = useState(0);
+  const [comboFire, setComboFire] = useState(false);
+  const [particles, setParticles] = useState<{ id: number; x: number; y: number; count: number; perfect: boolean }[]>([]);
+  const [dropCount, setDropCount] = useState(0);
+  const [showBonusAlert, setShowBonusAlert] = useState(false);
 
   const floatIdRef = useRef(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const animRef = useRef<number>(0);
   const gameAreaRef = useRef<HTMLDivElement>(null);
+  const particleIdRef = useRef(0);
+  const bonusTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const addFloat = useCallback((text: string, x: number, y: number, color: string) => {
+  const addFloat = useCallback((text: string, x: number, y: number, color: string, size?: number) => {
     const id = ++floatIdRef.current;
-    setFloats((prev) => [...prev, { id, text, x, y, color }]);
+    setFloats((prev) => [...prev, { id, text, x, y, color, size }]);
     setTimeout(() => {
       setFloats((prev) => prev.filter((f) => f.id !== id));
-    }, 1000);
+    }, 1200);
+  }, []);
+
+  const spawnParticles = useCallback((x: number, y: number, count: number, perfect: boolean) => {
+    const id = ++particleIdRef.current;
+    setParticles((prev) => [...prev, { id, x, y, count, perfect }]);
+    setTimeout(() => {
+      setParticles((prev) => prev.filter((p) => p.id !== id));
+    }, 800);
   }, []);
 
   const checkAchievements = useCallback(
-    (s: number, c: number, p: number) => {
+    (s: number, c: number, p: number, t: number) => {
       const unlocks: string[] = [];
       achievements.forEach((a) => {
         if (a.unlocked) return;
         let unlock = false;
-        if (a.id === "first" && totalStacks >= 1) unlock = true;
+        if (a.id === "first" && t >= 1) unlock = true;
         if (a.id === "perfect10" && p >= 10) unlock = true;
         if (a.id === "combo5" && c >= 5) unlock = true;
         if (a.id === "speed" && s >= 500) unlock = true;
+        if (a.id === "score250" && s >= 250) unlock = true;
+        if (a.id === "master" && t >= 30) unlock = true;
         if (unlock) {
           unlocks.push(a.label);
           setAchievements((prev) =>
@@ -204,10 +302,10 @@ export function MiniGame() {
       });
       if (unlocks.length > 0) {
         setNewAchievement(unlocks[0]);
-        setTimeout(() => setNewAchievement(null), 3000);
+        setTimeout(() => setNewAchievement(null), 3500);
       }
     },
-    [achievements, totalStacks]
+    [achievements]
   );
 
   const fetchLeaderboard = useCallback(async () => {
@@ -256,6 +354,14 @@ export function MiniGame() {
     [score, combo, perfectStacks, totalStacks, saving, fetchLeaderboard]
   );
 
+  const triggerShake = useCallback(() => {
+    setShakeX(4);
+    setTimeout(() => setShakeX(-3), 50);
+    setTimeout(() => setShakeX(2), 100);
+    setTimeout(() => setShakeX(-1), 150);
+    setTimeout(() => setShakeX(0), 200);
+  }, []);
+
   const addBrick = useCallback(() => {
     const prevBrick = stack[stack.length - 1];
     const prevWidth = prevBrick ? prevBrick.width : currentWidth;
@@ -279,56 +385,71 @@ export function MiniGame() {
     let newCombo = 0;
     let newPerfectStacks = perfectStacks;
 
+    if (!isPerfect) {
+      triggerShake();
+    }
+
     if (isPerfect) {
       newCombo = combo + 1;
       newPerfectStacks = perfectStacks + 1;
       pointsEarned = 20 + newCombo * 5;
+      if (newCombo >= 5) pointsEarned += 15;
     } else {
       newCombo = 0;
     }
 
+    const nextDrop = dropCount + 1;
+    const isBonus = nextDrop % BONUS_INTERVAL === 0;
+
     const newTotal = totalStacks + 1;
+    setDropCount(nextDrop);
     setTotalStacks(newTotal);
     setPerfectStacks(newPerfectStacks);
     setCombo(newCombo);
-    setCurrentWidth(clampedOverlap);
     setScore((s) => s + pointsEarned);
     setLastBrickTop((t) => t - BRICK_HEIGHT - 1);
-    setGameSpeed((s) => s + SPEED_INCREMENT);
+    setGameSpeed((s) => Math.min(s + SPEED_INCREMENT, MAX_SPEED));
     setDirection(Math.random() > 0.5 ? 1 : -1);
     setCanDrop(true);
+    setComboFire(newCombo >= 3);
 
-    checkAchievements(score + pointsEarned, newCombo, newPerfectStacks);
+    if (isBonus) {
+      setShowBonusAlert(true);
+      setTimeout(() => setShowBonusAlert(false), 800);
+    }
+
+    checkAchievements(score + pointsEarned, newCombo, newPerfectStacks, newTotal);
 
     const areaRect = gameAreaRef.current?.getBoundingClientRect();
     const areaX = areaRect?.left ?? 0;
     const areaTop = areaRect?.top ?? 0;
+    const popX = areaX + newX + clampedOverlap / 2 + (Math.random() - 0.5) * 40;
+    const popY = areaTop + lastBrickTop - 20;
 
-    addFloat(
-      isPerfect ? `+${pointsEarned} PERFECT!` : `+${pointsEarned}`,
-      areaX +
-        newX +
-        clampedOverlap / 2 +
-        (Math.random() - 0.5) * 40,
-      areaTop + lastBrickTop - 20,
-      isPerfect ? "#FFD700" : "#FF6B35"
-    );
+    if (isPerfect) {
+      addFloat(`+${pointsEarned} PERFECT!`, popX, popY, "#FFD700", 20);
+      spawnParticles(newX + clampedOverlap / 2, lastBrickTop - 10, 8, true);
+    } else if (clampedOverlap < prevWidth * 0.4) {
+      addFloat(`+${pointsEarned} TINY!`, popX, popY, "#FF6B35", 14);
+      spawnParticles(newX + clampedOverlap / 2, lastBrickTop - 10, 5, false);
+    } else {
+      addFloat(`+${pointsEarned}`, popX, popY, "#FF6B35", 16);
+      spawnParticles(newX + clampedOverlap / 2, lastBrickTop - 10, 3, false);
+    }
+
+    if (isBonus) {
+      const bonusPoints = 50 + Math.floor(score * 0.05);
+      setScore((s) => s + bonusPoints);
+      addFloat(`+${bonusPoints} BONUS!`, areaX + STACK_WIDTH / 2, areaTop + lastBrickTop - 60, "#FF4500", 22);
+    }
 
     setStack((prev) => [
       ...prev,
-      { width: clampedOverlap, x: newX, y: lastBrickTop, perfect: isPerfect },
+      { width: clampedOverlap, x: newX, y: lastBrickTop, perfect: isPerfect, bonus: isBonus },
     ]);
   }, [
-    stack,
-    movingX,
-    currentWidth,
-    lastBrickTop,
-    combo,
-    perfectStacks,
-    totalStacks,
-    score,
-    addFloat,
-    checkAchievements,
+    stack, movingX, currentWidth, lastBrickTop, combo, perfectStacks,
+    totalStacks, score, dropCount, addFloat, checkAchievements, triggerShake, spawnParticles,
   ]);
 
   const startGame = () => {
@@ -341,6 +462,7 @@ export function MiniGame() {
     setStack([]);
     setPerfectStacks(0);
     setTotalStacks(0);
+    setDropCount(0);
     setCurrentWidth(STACK_WIDTH - 20);
     setLastBrickTop(AREA_HEIGHT - BRICK_HEIGHT - 20);
     setDirection(1);
@@ -350,7 +472,10 @@ export function MiniGame() {
     setGameSpeed(BASE_SPEED);
     setCanDrop(true);
     setFloats([]);
+    setParticles([]);
     setNewAchievement(null);
+    setComboFire(false);
+    setShowBonusAlert(false);
   };
 
   const handleDrop = () => {
@@ -361,7 +486,6 @@ export function MiniGame() {
 
   useEffect(() => {
     if (state !== "playing") return;
-
     timerRef.current = setInterval(() => {
       setTimeLeft((t) => {
         if (t <= 1) {
@@ -374,7 +498,6 @@ export function MiniGame() {
         return t - 1;
       });
     }, 1000);
-
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
@@ -416,6 +539,12 @@ export function MiniGame() {
     saveScore(name);
   };
 
+  const getBrickStyle = (brick: StackBrick) => {
+    if (brick.bonus) return "bg-gradient-to-r from-purple-500 via-amber-400 to-purple-500 shadow-lg shadow-purple-500/30";
+    if (brick.perfect) return "bg-gradient-to-r from-red-400 via-amber-400 to-red-400 shadow-lg shadow-red-500/20";
+    return "bg-gradient-to-r from-[#B84A28] via-[#8B3A20] to-[#6B2810]";
+  };
+
   return (
     <section id="game" className="relative py-32 sm:py-48 px-6 bg-zinc-950 overflow-hidden">
       {showConfetti && state === "gameover" && <ConfettiCanvas />}
@@ -440,7 +569,10 @@ export function MiniGame() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Game area */}
           <div className="lg:col-span-2">
-            <div className="relative rounded-2xl border border-white/5 bg-black/60 backdrop-blur-xl p-4 sm:p-6 overflow-hidden">
+            <div
+              className="relative rounded-2xl border border-white/5 bg-black/60 backdrop-blur-xl p-4 sm:p-6 overflow-hidden"
+              style={{ transform: `translateX(${shakeX}px)` }}
+            >
               <AnimatePresence mode="wait">
                 {/* IDLE */}
                 {state === "idle" && (
@@ -484,16 +616,35 @@ export function MiniGame() {
                         <p className="text-[10px] uppercase tracking-wider text-white/30">Score</p>
                         <p className="text-2xl font-bold text-white tabular-nums">{score}</p>
                       </div>
-                      <div className="text-center">
+                      <div className="text-center flex flex-col items-center">
                         {combo >= 3 && (
-                          <motion.p
+                          <motion.div
                             initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
+                            animate={{ scale: [1, 1.15, 1] }}
                             key={combo}
-                            className="text-sm font-bold text-amber-400"
+                            transition={{ duration: 0.3 }}
                           >
-                            {combo}x Combo
-                          </motion.p>
+                            <span
+                              className={`text-lg font-bold ${
+                                combo >= 10 ? "text-red-400" : combo >= 7 ? "text-orange-400" : "text-amber-400"
+                              }`}
+                            >
+                              {combo}x
+                            </span>
+                            <span className="block text-[8px] uppercase tracking-wider text-white/20">
+                              Combo
+                            </span>
+                          </motion.div>
+                        )}
+                        {showBonusAlert && (
+                          <motion.span
+                            initial={{ scale: 0 }}
+                            animate={{ scale: [1, 1.3, 1] }}
+                            exit={{ scale: 0 }}
+                            className="text-[10px] font-bold text-purple-400 mt-1"
+                          >
+                            BONUS!
+                          </motion.span>
                         )}
                       </div>
                       <div className="text-right">
@@ -520,23 +671,45 @@ export function MiniGame() {
                       }}
                       onClick={handleDrop}
                     >
+                      {/* Wall texture background */}
+                      <div className="absolute inset-0 pointer-events-none opacity-[0.04]">
+                        {Array.from({ length: 15 }).map((_, r) => (
+                          Array.from({ length: 8 }).map((_, c) => (
+                            <div
+                              key={`${r}-${c}`}
+                              className="absolute border border-white/50"
+                              style={{
+                                width: STACK_WIDTH / 8 - 1,
+                                height: AREA_HEIGHT / 15 - 1,
+                                left: c * (STACK_WIDTH / 8),
+                                top: r * (AREA_HEIGHT / 15),
+                                borderRadius: 1,
+                              }}
+                            />
+                          ))
+                        ))}
+                      </div>
+
                       {/* Stacked bricks */}
                       {stack.map((brick, i) => (
-                        <div
+                        <motion.div
                           key={i}
-                          className={`absolute rounded-sm ${
-                            brick.perfect
-                              ? "bg-gradient-to-r from-red-400 via-amber-400 to-red-400 shadow-lg shadow-red-500/20"
-                              : "bg-gradient-to-r from-red-700 via-red-600 to-red-700"
-                          }`}
+                          initial={{ scaleY: 1.1, opacity: 0.6 }}
+                          animate={{ scaleY: 1, opacity: 0.85 + (i / stack.length) * 0.15 }}
+                          transition={{ duration: 0.15, ease: "easeOut" }}
+                          className={`absolute rounded-sm ${getBrickStyle(brick)}`}
                           style={{
                             width: brick.width,
                             left: brick.x,
                             top: brick.y,
                             height: BRICK_HEIGHT,
-                            opacity: 0.85 + (i / stack.length) * 0.15,
                           }}
-                        />
+                        >
+                          {/* Brick surface texture line */}
+                          <div className="absolute inset-x-[8%] top-[30%] h-[1px] bg-white/5 rounded-full" />
+                          <div className="absolute inset-x-[15%] top-[55%] h-[1px] bg-white/5 rounded-full" />
+                          <div className="absolute inset-x-[10%] top-[75%] h-[1px] bg-white/5 rounded-full" />
+                        </motion.div>
                       ))}
 
                       {/* Moving brick */}
@@ -549,25 +722,39 @@ export function MiniGame() {
                           height: BRICK_HEIGHT,
                         }}
                         animate={{
-                          boxShadow: [
-                            "0 0 10px rgba(255,107,53,0.2)",
-                            "0 0 20px rgba(255,107,53,0.4)",
-                            "0 0 10px rgba(255,107,53,0.2)",
-                          ],
+                          boxShadow: comboFire
+                            ? [
+                              "0 0 15px rgba(255,107,53,0.3), 0 0 30px rgba(255,68,0,0.2)",
+                              "0 0 25px rgba(255,107,53,0.5), 0 0 50px rgba(255,68,0,0.3)",
+                              "0 0 15px rgba(255,107,53,0.3), 0 0 30px rgba(255,68,0,0.2)",
+                            ]
+                            : [
+                              "0 0 10px rgba(255,107,53,0.2)",
+                              "0 0 20px rgba(255,107,53,0.4)",
+                              "0 0 10px rgba(255,107,53,0.2)",
+                            ],
                         }}
-                        transition={{ repeat: Infinity, duration: 0.8 }}
+                        transition={{ repeat: Infinity, duration: comboFire ? 0.4 : 0.8 }}
                       >
-                        <div className="w-full h-full bg-gradient-to-r from-red-500 via-orange-500 to-red-500 rounded-sm" />
+                        <div className="w-full h-full bg-gradient-to-r from-red-500 via-orange-500 to-red-500 rounded-sm">
+                          <div className="absolute inset-x-[10%] top-[25%] h-[1px] bg-white/10 rounded-full" />
+                          <div className="absolute inset-x-[20%] top-[50%] h-[1px] bg-white/10 rounded-full" />
+                          <div className="absolute inset-x-[12%] top-[72%] h-[1px] bg-white/10 rounded-full" />
+                        </div>
                         <div className="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent rounded-sm" />
+                        {comboFire && (
+                          <div className="absolute -top-1 left-0 right-0 h-2 bg-gradient-to-r from-red-500/0 via-orange-400/40 to-red-500/0 rounded-full blur-sm" />
+                        )}
                       </motion.div>
+
+                      {/* Particles */}
+                      {particles.map((p) => (
+                        <BrickParticles key={p.id} x={p.x} y={p.y} count={p.count} perfect={p.perfect} />
+                      ))}
 
                       {/* Floating scores */}
                       {floats.map((f) => (
-                        <ScorePopup
-                          key={f.id}
-                          {...f}
-                          onDone={() => {}}
-                        />
+                        <ScorePopup key={f.id} {...f} onDone={() => {}} />
                       ))}
 
                       {/* Grid lines */}
@@ -582,7 +769,18 @@ export function MiniGame() {
                       </div>
                     </div>
 
-                    <p className="text-[10px] text-white/10 text-center mt-3 font-mono">
+                    {/* Speed indicator */}
+                    <div className="flex justify-between items-center mt-3 px-1">
+                      <p className="text-[10px] text-white/10 font-mono">
+                        Speed: {((gameSpeed - BASE_SPEED) / (MAX_SPEED - BASE_SPEED) * 100).toFixed(0)}%
+                      </p>
+                      <div className="flex gap-3">
+                        <span className="text-[10px] text-white/10 font-mono">{totalStacks} stacks</span>
+                        <span className="text-[10px] text-amber-400/30 font-mono">{perfectStacks} perfect</span>
+                      </div>
+                    </div>
+
+                    <p className="text-[10px] text-white/10 text-center mt-1 font-mono">
                       Click to drop the brick
                     </p>
                   </motion.div>
@@ -607,9 +805,14 @@ export function MiniGame() {
                     <h3 className="text-3xl font-bold text-white mb-2">Game Over</h3>
 
                     {finalRank && finalRank <= 3 && (
-                      <p className="text-lg font-bold text-amber-400 mb-1">
+                      <motion.p
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 10, delay: 0.4 }}
+                        className="text-lg font-bold text-amber-400 mb-1"
+                      >
                         #{finalRank} on the Leaderboard!
-                      </p>
+                      </motion.p>
                     )}
 
                     <div className="flex gap-8 my-6">
@@ -618,13 +821,26 @@ export function MiniGame() {
                         <p className="text-3xl font-bold text-white tabular-nums">{score}</p>
                       </div>
                       <div className="text-center">
-                        <p className="text-[10px] uppercase tracking-wider text-white/30">Combo</p>
+                        <p className="text-[10px] uppercase tracking-wider text-white/30">Best Combo</p>
                         <p className="text-3xl font-bold text-amber-400 tabular-nums">{combo}x</p>
                       </div>
                       <div className="text-center">
                         <p className="text-[10px] uppercase tracking-wider text-white/30">Perfect</p>
                         <p className="text-3xl font-bold text-emerald-400 tabular-nums">
                           {perfectStacks}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-6 mb-6 text-center">
+                      <div>
+                        <p className="text-[10px] uppercase tracking-wider text-white/20">Total Stacks</p>
+                        <p className="text-lg font-bold text-white/60 tabular-nums">{totalStacks}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] uppercase tracking-wider text-white/20">Accuracy</p>
+                        <p className="text-lg font-bold text-white/60 tabular-nums">
+                          {totalStacks > 0 ? Math.round((perfectStacks / totalStacks) * 100) : 0}%
                         </p>
                       </div>
                     </div>
