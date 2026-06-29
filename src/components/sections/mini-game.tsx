@@ -485,7 +485,7 @@ export function MiniGame() {
   }
 
   // ─── Game Loop ──────────────────────────────────────
-  const gameLoop = useCallback(() => {
+  function gameLoop() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -667,14 +667,36 @@ export function MiniGame() {
       if (p.life <= 0) { particles.current.splice(pi, 1); continue; }
       drawParticle(ctx, p);
     }
+  }
 
-    // Sync React state periodically
-    animId.current = requestAnimationFrame(gameLoop);
-    setScore(scoreRef.current);
-    setCombo(comboRef.current);
-    setBricksBroken(brokenRef.current);
-    setLives(livesRef.current);
-  }, [checkAchievements]);
+  const loopRunning = useRef(false);
+  const syncTimer = useRef<NodeJS.Timeout | null>(null);
+
+  function gameLoopFrame() {
+    gameLoop();
+    if (loopRunning.current) requestAnimationFrame(gameLoopFrame);
+  }
+
+  function startLoop() {
+    if (loopRunning.current) return;
+    loopRunning.current = true;
+    requestAnimationFrame(gameLoopFrame);
+    // Sync React state every 250ms instead of every frame
+    syncTimer.current = setInterval(() => {
+      setScore(scoreRef.current);
+      setCombo(comboRef.current);
+      setBricksBroken(brokenRef.current);
+      setLives(livesRef.current);
+    }, 250);
+  }
+
+  function stopLoop() {
+    loopRunning.current = false;
+    if (syncTimer.current) {
+      clearInterval(syncTimer.current);
+      syncTimer.current = null;
+    }
+  }
 
   // ─── Start / Reset ─────────────────────────────────
   const startGame = useCallback(() => {
@@ -707,8 +729,8 @@ export function MiniGame() {
     particles.current = [];
     powerups.current = [];
     mouseXRef.current = GAME_W / 2;
-    animId.current = requestAnimationFrame(gameLoop);
-  }, [gameLoop]);
+    startLoop();
+  }, []);
 
   // ─── Mouse / Touch ──────────────────────────────────
   const handlePointer = useCallback((clientX: number) => {
@@ -732,9 +754,9 @@ export function MiniGame() {
   // ─── Canvas ref + game loop management ──────────────
   useEffect(() => {
     if (state !== "playing") return;
-    animId.current = requestAnimationFrame(gameLoop);
-    return () => cancelAnimationFrame(animId.current);
-  }, [state, gameLoop]);
+    startLoop();
+    return () => stopLoop();
+  }, [state]);
 
   // ─── Name submit ────────────────────────────────────
   const handleNameSubmit = () => {
