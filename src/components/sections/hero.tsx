@@ -107,13 +107,13 @@ function HeroContent() {
       ref={sectionRef}
       className="relative z-10 flex flex-col items-center justify-center min-h-screen text-center px-6"
     >
-      {/* Parallax gradient orbs */}
+      {/* Parallax gradient orbs — hidden on mobile */}
       <motion.div
-        className="absolute top-1/4 -left-48 w-[500px] h-[500px] rounded-full bg-red-900/5 blur-[150px] pointer-events-none"
+        className="absolute top-1/4 -left-48 w-[500px] h-[500px] rounded-full bg-red-900/5 blur-[150px] pointer-events-none max-sm:hidden"
         style={{ x: useTransform(mouseX, [0, 1], [0, -40]), y: useTransform(mouseY, [0, 1], [0, -40]) }}
       />
       <motion.div
-        className="absolute bottom-1/4 -right-48 w-[400px] h-[400px] rounded-full bg-red-800/5 blur-[120px] pointer-events-none"
+        className="absolute bottom-1/4 -right-48 w-[400px] h-[400px] rounded-full bg-red-800/5 blur-[120px] pointer-events-none max-sm:hidden"
         style={{ x: useTransform(mouseX, [0, 1], [0, 40]), y: useTransform(mouseY, [0, 1], [0, 40]) }}
       />
 
@@ -128,7 +128,7 @@ function HeroContent() {
           transition={{ duration: 0.8, delay: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
           className="mb-8"
         >
-          <Badge className="tracking-[0.25em] text-[10px] px-4 py-1.5">
+          <Badge className="tracking-[0.25em] text-[10px] px-4 py-1.5 sm:px-5 sm:py-2">
             <span className="inline-flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
               The Original — Limited Edition
@@ -156,12 +156,20 @@ function HeroContent() {
           Forged from the finest clay. Admired by visionaries. Desired by collectors.
         </motion.p>
 
+        {/* Divider — mobile only */}
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 0.8, delay: 2, ease: [0.25, 0.1, 0.25, 1] }}
+          className="sm:hidden mt-8 h-px w-16 mx-auto bg-gradient-to-r from-transparent via-red-400/40 to-transparent"
+        />
+
         {/* Price */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 2.2 }}
-          className="mt-6 text-3xl sm:text-4xl font-bold text-white"
+          className="mt-6 sm:mt-6 text-3xl sm:text-4xl font-bold text-white"
         >
           {formatPrice(price)}
         </motion.p>
@@ -181,17 +189,26 @@ function HeroContent() {
           transition={{ duration: 0.8, delay: 2.6, ease: [0.25, 0.1, 0.25, 1] }}
           className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <a href="/checkout">
-            <MagneticButton size="lg" className="group text-sm px-10">
-              Buy Now
+          <a href="/checkout" className="w-full sm:w-auto max-w-xs">
+            <MagneticButton size="lg" className="group text-sm px-10 w-full sm:w-auto">
+              Secure Yours Now
               <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
             </MagneticButton>
           </a>
-          <a href="#story">
-            <MagneticButton variant="outline" size="lg" className="text-sm px-10">
-              Explore Legacy
+          <a href="#story" className="w-full sm:w-auto max-w-xs">
+            <MagneticButton variant="outline" size="lg" className="text-sm px-10 w-full sm:w-auto">
+              Discover the Craft
             </MagneticButton>
           </a>
+          {/* Trust line — mobile only */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 3 }}
+            className="sm:hidden text-[10px] text-white/40 tracking-wider mt-2"
+          >
+            Free shipping &middot; 30-day return &middot; Insured delivery
+          </motion.p>
         </motion.div>
 
         {/* Scroll indicator */}
@@ -235,9 +252,22 @@ export function Hero() {
 
   return (
     <section className="relative h-screen w-full overflow-hidden bg-[#8d7a7a]">
+      {/* Mobile decorative frame */}
+      <div className="absolute inset-0 z-[7] pointer-events-none sm:hidden">
+        <div className="absolute top-4 left-4 right-4 h-px bg-gradient-to-r from-transparent via-red-400/20 to-transparent" />
+        <div className="absolute bottom-4 left-4 right-4 h-px bg-gradient-to-r from-transparent via-red-400/20 to-transparent" />
+        <div className="absolute left-4 top-4 bottom-4 w-px bg-gradient-to-b from-transparent via-red-400/20 to-transparent" />
+        <div className="absolute right-4 top-4 bottom-4 w-px bg-gradient-to-b from-transparent via-red-400/20 to-transparent" />
+        {/* Corner accents */}
+        <div className="absolute top-4 left-4 w-3 h-3 border-t border-l border-red-400/20" />
+        <div className="absolute top-4 right-4 w-3 h-3 border-t border-r border-red-400/20" />
+        <div className="absolute bottom-4 left-4 w-3 h-3 border-b border-l border-red-400/20" />
+        <div className="absolute bottom-4 right-4 w-3 h-3 border-b border-r border-red-400/20" />
+      </div>
+
       {/* Grain overlay */}
       <div
-        className="absolute inset-0 z-[6] opacity-[0.025] mix-blend-overlay pointer-events-none"
+        className="absolute inset-0 z-[6] opacity-[0.025] mix-blend-overlay pointer-events-none hidden sm:block"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")`,
         }}
@@ -247,7 +277,11 @@ export function Hero() {
       <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#8d7a7a] via-[#8d7a7a]/80 to-transparent z-[5] pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-950/10 via-transparent to-transparent z-[1] pointer-events-none" />
 
-      {/* 3D Scene */}
+      {/* Mobile-only premium gradient */}
+      <div className="absolute inset-0 z-[1] sm:hidden bg-gradient-to-b from-[#8d7a7a]/40 via-[#8d7a7a] to-[#8d7a7a]" />
+      <div className="absolute inset-0 z-[1] sm:hidden bg-[radial-gradient(ellipse_at_center,_#cc816d_0%,_transparent_70%)] opacity-30" />
+
+      {/* 3D Scene — hidden on mobile */}
       <Suspense
         fallback={
            <div className="absolute inset-0 flex items-center justify-center bg-[#8d7a7a]">
@@ -255,7 +289,7 @@ export function Hero() {
           </div>
         }
       >
-        <div className="absolute inset-0 z-[2]">
+        <div className="absolute inset-0 z-[2] max-sm:hidden">
           <InteractiveScene mouseX={mouseX} mouseY={mouseY} />
         </div>
       </Suspense>
