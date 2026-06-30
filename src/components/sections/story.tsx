@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { Badge } from "@/components/ui/badge";
@@ -153,33 +153,12 @@ function BrickAnimation({ step, progress }: { step: number; progress: number }) 
 
 export function StorySection() {
   const ref = useRef<HTMLElement>(null);
-  const [activeStep, setActiveStep] = useState(0);
-  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
 
   const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-  const brickOpacity = useTransform(scrollYProgress, [0, 0.1, 0.9, 1], [0, 1, 1, 0]);
-
-  useEffect(() => {
-    const observers: IntersectionObserver[] = [];
-    itemRefs.current.forEach((el, i) => {
-      if (!el) return;
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setActiveStep(i);
-          }
-        },
-        { threshold: 0.4 }
-      );
-      observer.observe(el);
-      observers.push(observer);
-    });
-    return () => observers.forEach((o) => o.disconnect());
-  }, []);
 
   return (
     <section id="story" ref={ref} className="relative py-32 sm:py-48 px-6 bg-[#8d7a7a] overflow-hidden">
@@ -209,27 +188,10 @@ export function StorySection() {
             />
           </div>
 
-          {/* Brick animation - scrolls naturally, transforms per step */}
-          <div className="hidden md:flex justify-center mb-32">
-            <motion.div
-              className="w-48 h-32 rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-4"
-              style={{ opacity: brickOpacity }}
-            >
-              <BrickAnimation step={activeStep} progress={0.5} />
-              <motion.p
-                className="text-[8px] text-white text-center mt-1 tracking-wider font-mono"
-                style={{ opacity: brickOpacity }}
-              >
-                {stageLabels[activeStep] ?? "Final"}
-              </motion.p>
-            </motion.div>
-          </div>
-
           <div className="space-y-32 md:space-y-48">
             {timeline.map((item, i) => (
               <motion.div
                 key={item.year}
-                ref={(el) => { itemRefs.current[i] = el; }}
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true, margin: "-150px" }}
@@ -263,19 +225,26 @@ export function StorySection() {
                   </motion.div>
                 </div>
 
-                {/* Stat */}
-                <div className={`hidden md:block md:w-1/2 ${i % 2 === 0 ? "md:pl-20" : "md:pr-20 md:text-right"}`}>
+                {/* Brick + Stat */}
+                <div className={`hidden md:flex md:w-1/2 flex-col items-center gap-4 ${i % 2 === 0 ? "md:pl-20" : "md:pr-20 md:text-right"}`}>
                   <motion.div
                     initial={{ opacity: 0, x: i % 2 === 0 ? 30 : -30 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 0.8, delay: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+                    className="w-36 h-24 rounded-xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-3"
                   >
+                    <BrickAnimation step={i} progress={0.5} />
+                    <p className="text-[8px] text-white text-center mt-1 tracking-wider font-mono">
+                      {stageLabels[i]}
+                    </p>
+                  </motion.div>
+                  <div>
                     <p className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20">
                       {item.stat}
                     </p>
                     <p className="text-xs text-white mt-1 tracking-wider">{item.statLabel}</p>
-                  </motion.div>
+                  </div>
                 </div>
               </motion.div>
             ))}
