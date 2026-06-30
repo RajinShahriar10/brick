@@ -64,6 +64,7 @@ export default function CheckoutPage() {
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [processingPayment, setProcessingPayment] = useState(false);
 
@@ -147,14 +148,19 @@ export default function CheckoutPage() {
     };
 
     try {
-      await fetch("/api/orders", {
+      setError("");
+      const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: "Failed to place order" }));
+        throw new Error(err.error || "Failed to place order");
+      }
       setSubmitted(true);
-    } catch {
-      // silent
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -580,6 +586,9 @@ export default function CheckoutPage() {
                       <span>100-year warranty included</span>
                     </div>
 
+                    {error && (
+                      <p className="text-xs text-red-400 text-center">{error}</p>
+                    )}
                     <MagneticButton
                       type="submit"
                       loading={loading}

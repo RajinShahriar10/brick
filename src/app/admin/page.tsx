@@ -7,36 +7,47 @@ import { formatPrice, formatDate } from "@/lib/utils";
 export const dynamic = "force-dynamic";
 
 async function getStats() {
-  const [
-    totalOrders,
-    totalRevenue,
-    totalProducts,
-    totalContacts,
-    totalMedia,
-    recentOrders,
-  ] = await Promise.all([
-    prisma.order.count(),
-    prisma.order.aggregate({
-      _sum: { total: true },
-      where: { status: { not: "CANCELLED" } },
-    }),
-    prisma.product.count({ where: { isArchived: false } }),
-    prisma.contactSubmission.count(),
-    prisma.media.count(),
-    prisma.order.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 5,
-    }),
-  ]);
+  try {
+    const [
+      totalOrders,
+      totalRevenue,
+      totalProducts,
+      totalContacts,
+      totalMedia,
+      recentOrders,
+    ] = await Promise.all([
+      prisma.order.count(),
+      prisma.order.aggregate({
+        _sum: { total: true },
+        where: { status: { not: "CANCELLED" } },
+      }),
+      prisma.product.count({ where: { isArchived: false } }),
+      prisma.contactSubmission.count(),
+      prisma.media.count(),
+      prisma.order.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 5,
+      }),
+    ]);
 
-  return {
-    totalOrders,
-    totalRevenue: totalRevenue._sum.total ?? 0,
-    totalProducts,
-    totalContacts,
-    totalMedia,
-    recentOrders,
-  };
+    return {
+      totalOrders,
+      totalRevenue: totalRevenue._sum.total ?? 0,
+      totalProducts,
+      totalContacts,
+      totalMedia,
+      recentOrders,
+    };
+  } catch {
+    return {
+      totalOrders: 0,
+      totalRevenue: 0,
+      totalProducts: 0,
+      totalContacts: 0,
+      totalMedia: 0,
+      recentOrders: [],
+    };
+  }
 }
 
 export default async function AdminDashboardPage() {
