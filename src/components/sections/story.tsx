@@ -209,10 +209,10 @@ export function StorySection() {
             />
           </div>
 
-          {/* Brick animation - centered on desktop */}
-          <div className="hidden md:block sticky top-1/3 mx-auto mb-24 w-48 h-32 -translate-y-1/2 z-10">
+          {/* Brick animation - scrolls naturally, transforms per step */}
+          <div className="hidden md:flex justify-center mb-32">
             <motion.div
-              className="w-full h-full rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-4"
+              className="w-48 h-32 rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-4"
               style={{ opacity: brickOpacity }}
             >
               <BrickAnimation step={activeStep} progress={0.5} />
