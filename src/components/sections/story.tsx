@@ -152,12 +152,12 @@ export function StorySection() {
   const stageLabel = stageLabels[stageIndex];
 
   return (
-    <section id="story" ref={ref} className="relative py-16 sm:py-24 px-6 bg-[#8d7a7a]">
+    <section id="story" ref={ref} className="relative py-32 sm:py-48 px-6 bg-[#8d7a7a]">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-950/5 via-transparent to-transparent" />
 
       <div className="mx-auto max-w-7xl relative">
         <ScrollReveal>
-          <div className="text-center mb-12">
+          <div className="text-center mb-24">
             <Badge className="mb-4 tracking-[0.2em]">The Making Of</Badge>
             <h2 className="text-4xl sm:text-6xl font-bold text-white tracking-tight">
               From Earth to
@@ -179,7 +179,7 @@ export function StorySection() {
               />
             </div>
 
-            <div className="space-y-16 md:space-y-24">
+            <div className="space-y-32 md:space-y-48">
               {timeline.map((item, i) => (
                 <motion.div
                   key={item.year}
@@ -228,7 +228,9 @@ export function StorySection() {
             style={{ y: brickY }}
           >
             <div className="rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-8">
-              <BrickAnimation progress={progress} />
+              <div className="h-40">
+                <BrickAnimation progress={progress} />
+              </div>
               <div className="mt-4 text-center">
                 <p className="text-[10px] tracking-[0.3em] text-red-500/60 uppercase font-mono">{currentStage.year}</p>
                 <p className="text-xl font-bold text-white mt-1">{currentStage.title}</p>
