@@ -164,77 +164,73 @@ export function StorySection() {
           </div>
         </ScrollReveal>
 
-        <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">
-          {/* Timeline */}
-          <div className="relative">
-            <div className="absolute left-4 top-0 bottom-0 w-[1px] bg-white/5">
-              <motion.div
-                className="w-full bg-gradient-to-b from-red-500 via-red-600 to-transparent"
-                style={{ scaleY: scrollYProgress, originY: 0 }}
-              />
-            </div>
-
-            <div className="space-y-32 md:space-y-48">
-              {timeline.map((item, i) => (
-                <motion.div
-                  key={item.year}
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true, margin: "-150px" }}
-                  className="relative pl-12"
-                >
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    whileInView={{ scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
-                    className="absolute left-0 w-4 h-4 -translate-x-1/2 mt-1"
-                  >
-                    <div className="w-4 h-4 rounded-full bg-red-600 shadow-lg shadow-red-600/30" />
-                    <div className="absolute inset-0 rounded-full bg-red-500 animate-ping opacity-20" />
-                  </motion.div>
-
-                  <div>
-                    <motion.div
-                      initial={{ opacity: 0, x: -30 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true, margin: "-100px" }}
-                      transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-                    >
-                      <span className="text-[10px] tracking-[0.3em] text-red-500/60 uppercase font-mono">{item.year}</span>
-                      <h3 className="text-2xl sm:text-3xl font-bold text-white mt-2 mb-4">{item.title}</h3>
-                      <p className="text-sm text-white leading-relaxed">{item.description}</p>
-                      <div className="mt-6">
-                        <p className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20">
-                          {item.stat}
-                        </p>
-                        <p className="text-xs text-white mt-1 tracking-wider">{item.statLabel}</p>
-                      </div>
-                    </motion.div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-
-          {/* Sticky brick animation */}
-          <div className="hidden md:flex flex-col items-center justify-start">
-            <div className="sticky top-32 w-full max-w-sm">
-              <div className="rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-8">
-                <BrickAnimation progress={progress} />
-                <div className="mt-4 text-center">
-                  <p className="text-[10px] tracking-[0.3em] text-red-500/60 uppercase font-mono">{currentStage.year}</p>
-                  <p className="text-xl font-bold text-white mt-1">{currentStage.title}</p>
-                  <p className="text-[10px] text-white/40 mt-2 tracking-wider uppercase">{stageLabel}</p>
-                  <div className="mt-6 pt-4 border-t border-white/5">
-                    <p className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20">
-                      {currentStage.stat}
-                    </p>
-                    <p className="text-xs text-white mt-1 tracking-wider">{currentStage.statLabel}</p>
-                  </div>
-                </div>
+        {/* Single brick animation — scrolls with the page */}
+        <div className="max-w-xs mx-auto mb-24">
+          <div className="rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-8">
+            <BrickAnimation progress={progress} />
+            <div className="mt-4 text-center">
+              <p className="text-[10px] tracking-[0.3em] text-red-500/60 uppercase font-mono">{currentStage.year}</p>
+              <p className="text-xl font-bold text-white mt-1">{currentStage.title}</p>
+              <p className="text-[10px] text-white/40 mt-2 tracking-wider uppercase">{stageLabel}</p>
+              <div className="mt-6 pt-4 border-t border-white/5">
+                <p className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20">
+                  {currentStage.stat}
+                </p>
+                <p className="text-xs text-white mt-1 tracking-wider">{currentStage.statLabel}</p>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Timeline */}
+        <div className="relative">
+          <div className="absolute left-4 top-0 bottom-0 w-[1px] bg-white/5">
+            <motion.div
+              className="w-full bg-gradient-to-b from-red-500 via-red-600 to-transparent"
+              style={{ scaleY: scrollYProgress, originY: 0 }}
+            />
+          </div>
+
+          <div className="space-y-32 md:space-y-48">
+            {timeline.map((item, i) => (
+              <motion.div
+                key={item.year}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true, margin: "-150px" }}
+                className="relative pl-12"
+              >
+                <motion.div
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
+                  className="absolute left-0 w-4 h-4 -translate-x-1/2 mt-1"
+                >
+                  <div className="w-4 h-4 rounded-full bg-red-600 shadow-lg shadow-red-600/30" />
+                  <div className="absolute inset-0 rounded-full bg-red-500 animate-ping opacity-20" />
+                </motion.div>
+
+                <div>
+                  <motion.div
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+                  >
+                    <span className="text-[10px] tracking-[0.3em] text-red-500/60 uppercase font-mono">{item.year}</span>
+                    <h3 className="text-2xl sm:text-3xl font-bold text-white mt-2 mb-4">{item.title}</h3>
+                    <p className="text-sm text-white leading-relaxed">{item.description}</p>
+                    <div className="mt-6">
+                      <p className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20">
+                        {item.stat}
+                      </p>
+                      <p className="text-xs text-white mt-1 tracking-wider">{item.statLabel}</p>
+                    </div>
+                  </motion.div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </div>
