@@ -45,19 +45,13 @@ const timeline = [
 
 const stageLabels = ["Raw Clay", "CNC Shaping", "Kiln Firing", "Nano Coating", "Serialization"];
 
-function BrickAnimation({ progress }: { progress: number }) {
+function BrickAnimation({ stageIndex }: { stageIndex: number }) {
   const clay = "#8B5E3C";
   const brickBody = "#B84A28";
   const brickDark = "#8B3A20";
 
-  const clayOpacity = Math.max(0, 1 - progress * 2.5);
-  const brickOpacity = Math.min(1, Math.max(0, (progress - 0.1) * 2.5));
-  const cncOpacity = Math.max(0, 1 - Math.abs(progress - 0.3) * 6);
-  const firingOpacity = Math.max(0, 1 - Math.abs(progress - 0.5) * 6);
-  const coatingOpacity = Math.min(1, Math.max(0, (progress - 0.45) * 5));
-  const serialOpacity = Math.min(1, Math.max(0, (progress - 0.75) * 5));
-
-  const serialNum = Math.floor(progress * 99999);
+  const dur = 0.6;
+  const serialNum = Math.floor((stageIndex / 4) * 99999);
 
   return (
     <motion.svg viewBox="0 0 120 80" className="w-full h-full">
@@ -79,39 +73,39 @@ function BrickAnimation({ progress }: { progress: number }) {
         </linearGradient>
       </defs>
 
-      <g style={{ opacity: clayOpacity }}>
+      <motion.g animate={{ opacity: stageIndex === 0 ? 1 : 0 }} transition={{ duration: dur }}>
         <ellipse cx="60" cy="55" rx={25} ry={10} fill={clay} />
         <ellipse cx="55" cy="48" rx={18} ry={14} fill="#A0704A" />
         <ellipse cx="52" cy="42" rx={12} ry={10} fill="#B8845A" />
         <circle cx="48" cy="38" r="2" fill="#8B5E3C" opacity={0.5} />
         <circle cx="58" cy="44" r="1.5" fill="#8B5E3C" opacity={0.4} />
         <circle cx="54" cy="35" r="1" fill="#8B5E3C" opacity={0.3} />
-      </g>
+      </motion.g>
 
-      <g style={{ opacity: brickOpacity }}>
+      <motion.g animate={{ opacity: stageIndex >= 1 ? 1 : 0 }} transition={{ duration: dur }}>
         <rect x="15" y="20" width="90" height="40" rx="3" fill="url(#brickGrad)" />
         {[30, 50].map((y) => (
           <line key={y} x1="20" y1={y} x2="100" y2={y} stroke="rgba(0,0,0,0.08)" strokeWidth="0.5" />
         ))}
-      </g>
+      </motion.g>
 
-      <g style={{ opacity: cncOpacity }}>
+      <motion.g animate={{ opacity: stageIndex === 1 ? 1 : 0 }} transition={{ duration: dur }}>
         {[25, 30, 35, 40, 45, 50, 55].map((y) => (
           <line key={y} x1="20" y1={y} x2="100" y2={y} stroke="rgba(255,255,255,0.08)" strokeWidth="0.5" />
         ))}
-      </g>
+      </motion.g>
 
-      <g style={{ opacity: firingOpacity }}>
+      <motion.g animate={{ opacity: stageIndex === 2 ? 1 : 0 }} transition={{ duration: dur }}>
         <rect x="15" y="20" width="90" height="40" rx="3" fill="url(#heatGlow)" />
         <rect x="15" y="20" width="90" height="40" rx="3" fill="rgba(255,68,0,0.15)" />
-      </g>
+      </motion.g>
 
-      <g style={{ opacity: coatingOpacity }}>
+      <motion.g animate={{ opacity: stageIndex >= 3 ? 1 : 0 }} transition={{ duration: dur }}>
         <rect x="15" y="20" width="90" height="40" rx="3" fill="url(#coating)" />
         <rect x="20" y="23" width="80" height="4" rx="2" fill="rgba(255,255,255,0.12)" />
-      </g>
+      </motion.g>
 
-      <g style={{ opacity: serialOpacity }}>
+      <motion.g animate={{ opacity: stageIndex >= 4 ? 1 : 0 }} transition={{ duration: dur }}>
         <text
           x="60" y="47"
           textAnchor="middle"
@@ -123,7 +117,7 @@ function BrickAnimation({ progress }: { progress: number }) {
           BE-{String(serialNum).padStart(5, "0")}
         </text>
         <rect x="18" y="22" width="84" height="1" fill="rgba(255,255,255,0.08)" />
-      </g>
+      </motion.g>
 
       <ellipse cx="60" cy="68" rx="35" ry="4" fill="rgba(0,0,0,0.15)" />
     </motion.svg>
@@ -229,7 +223,7 @@ export function StorySection() {
           >
             <div className="rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-8">
               <div className="h-40">
-                <BrickAnimation progress={progress} />
+                <BrickAnimation stageIndex={stageIndex} />
               </div>
               <div className="mt-4 text-center">
                 <p className="text-[10px] tracking-[0.3em] text-red-500/60 uppercase font-mono">{currentStage.year}</p>
