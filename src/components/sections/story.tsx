@@ -138,7 +138,10 @@ export function StorySection() {
     offset: ["start end", "end start"],
   });
 
-  const brickY = useTransform(scrollYProgress, [0, 0.2, 1], [0, 0, 1500]);
+  const brickY = useTransform(scrollYProgress,
+    [0, 0.18, 0.22, 0.38, 0.42, 0.58, 0.62, 0.78, 0.82, 1],
+    [0, 0, 300, 300, 600, 600, 900, 900, 1200, 1200]
+  );
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     setProgress(latest);
@@ -149,12 +152,12 @@ export function StorySection() {
   const stageLabel = stageLabels[stageIndex];
 
   return (
-    <section id="story" ref={ref} className="relative py-32 sm:py-48 px-6 bg-[#8d7a7a]">
+    <section id="story" ref={ref} className="relative py-16 sm:py-24 px-6 bg-[#8d7a7a]">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-950/5 via-transparent to-transparent" />
 
       <div className="mx-auto max-w-7xl relative">
         <ScrollReveal>
-          <div className="text-center mb-24">
+          <div className="text-center mb-12">
             <Badge className="mb-4 tracking-[0.2em]">The Making Of</Badge>
             <h2 className="text-4xl sm:text-6xl font-bold text-white tracking-tight">
               From Earth to
@@ -176,7 +179,7 @@ export function StorySection() {
               />
             </div>
 
-            <div className="space-y-32 md:space-y-48">
+            <div className="space-y-16 md:space-y-24">
               {timeline.map((item, i) => (
                 <motion.div
                   key={item.year}
