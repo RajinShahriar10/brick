@@ -13,6 +13,8 @@ interface Analytics {
   totalGameScores: number;
   orderStatuses: { status: string; count: number }[];
   dailyRevenue: Record<string, number>;
+  dailyOrders: Record<string, number>;
+  productSales: { name: string; quantity: number; orders: number }[];
 }
 
 const statusColors: Record<string, string> = {
@@ -40,6 +42,8 @@ export default function AdminAnalyticsPage() {
     : [];
 
   const maxRevenue = Math.max(...days.map(([, v]) => v), 1);
+  const maxOrders = Math.max(...days.map(([d]) => data?.dailyOrders[d] ?? 0), 1);
+  const maxProductQty = Math.max(...(data?.productSales.map((p) => p.quantity) ?? []), 1);
 
   return (
     <div className="flex min-h-screen bg-zinc-950">
@@ -62,68 +66,114 @@ export default function AdminAnalyticsPage() {
               <StatCard icon={Gamepad2} label="Game Plays" value={data.totalGameScores} />
             </div>
 
-            {/* Revenue chart */}
-            <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6">
-              <h2 className="text-sm font-semibold text-white mb-6">Daily Revenue (Last 30 Days)</h2>
-              <div className="flex items-end gap-[3px] h-32">
-                {days.map(([day, rev]) => (
-                  <div
-                    key={day}
-                    className="flex-1 relative group"
-                  >
-                    <div
-                      className="w-full bg-gradient-to-t from-red-600/30 to-red-500/60 rounded-t hover:from-red-500/40 hover:to-red-400/70 transition-all cursor-pointer"
-                      style={{ height: `${(rev / maxRevenue) * 100}%` }}
-                    >
-                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black/80 text-[10px] text-white px-2 py-1 rounded">
-                        {formatPrice(rev)}
-                      </div>
-                    </div>
-                    {days.length <= 15 && (
-                      <p className="text-[8px] text-white mt-1 text-center">
-                        {day.slice(5)}
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Order status breakdown */}
+            {/* Revenue + Orders chart */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6">
-                <h2 className="text-sm font-semibold text-white mb-6">Order Status</h2>
-                <div className="space-y-4">
-                  {data.orderStatuses.map((s) => {
-                    const pct =
-                      data.totalOrders > 0
-                        ? Math.round((s.count / data.totalOrders) * 100)
-                        : 0;
+                <h2 className="text-sm font-semibold text-white mb-6">Daily Revenue (Last 30 Days)</h2>
+                <div className="flex items-end gap-[3px] h-32">
+                  {days.map(([day, rev]) => (
+                    <div key={day} className="flex-1 relative group">
+                      <div
+                        className="w-full bg-gradient-to-t from-emerald-600/30 to-emerald-500/60 rounded-t hover:from-emerald-500/40 hover:to-emerald-400/70 transition-all cursor-pointer"
+                        style={{ height: `${(rev / maxRevenue) * 100}%` }}
+                      >
+                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black/80 text-[10px] text-white px-2 py-1 rounded">
+                          {formatPrice(rev)}
+                        </div>
+                      </div>
+                      {days.length <= 15 && (
+                        <p className="text-[8px] text-white mt-1 text-center">{day.slice(5)}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6">
+                <h2 className="text-sm font-semibold text-white mb-6">Daily Orders (Last 30 Days)</h2>
+                <div className="flex items-end gap-[3px] h-32">
+                  {days.map(([day]) => {
+                    const count = data.dailyOrders[day] ?? 0;
                     return (
-                      <div key={s.status}>
-                        <div className="flex justify-between text-xs mb-1.5">
-                          <span className="text-white">{s.status}</span>
-                          <span className="text-white tabular-nums">{s.count}</span>
+                      <div key={day} className="flex-1 relative group">
+                        <div
+                          className="w-full bg-gradient-to-t from-red-600/30 to-red-500/60 rounded-t hover:from-red-500/40 hover:to-red-400/70 transition-all cursor-pointer"
+                          style={{ height: `${(count / maxOrders) * 100}%` }}
+                        >
+                          <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black/80 text-[10px] text-white px-2 py-1 rounded">
+                            {count} order{count !== 1 ? "s" : ""}
+                          </div>
                         </div>
-                        <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                          <div
-                            className={`h-full rounded-full transition-all duration-700 ${statusColors[s.status] ?? "bg-white/10"}`}
-                            style={{ width: `${pct}%` }}
-                          />
-                        </div>
+                        {days.length <= 15 && (
+                          <p className="text-[8px] text-white mt-1 text-center">{day.slice(5)}</p>
+                        )}
                       </div>
                     );
                   })}
                 </div>
               </div>
+            </div>
 
+            {/* Product sales + Order status */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6">
-                <h2 className="text-sm font-semibold text-white mb-6">Summary</h2>
-                <div className="space-y-4">
-                  <SummaryRow label="Avg Order Value" value={formatPrice(data.totalOrders > 0 ? Math.round(data.totalRevenue / data.totalOrders) : 0)} />
-                  <SummaryRow label="Conversion Rate" value="N/A (no views tracked)" />
-                  <SummaryRow label="Top Player Score" value={String(Math.max(...(data as any).topScore ? [(data as any).topScore] : [0]))} />
-                  <SummaryRow label="Total Database Records" value={String(data.totalOrders + data.totalProducts + data.totalContacts + data.totalGameScores)} />
+                <h2 className="text-sm font-semibold text-white mb-6">Top Products Sold</h2>
+                {data.productSales.length === 0 ? (
+                  <p className="text-xs text-white">No sales data yet.</p>
+                ) : (
+                  <div className="space-y-4">
+                    {data.productSales.map((p, i) => (
+                      <div key={p.name}>
+                        <div className="flex justify-between text-xs mb-1.5">
+                          <span className="text-white truncate mr-2">{i + 1}. {p.name}</span>
+                          <span className="text-white tabular-nums shrink-0">{p.quantity} sold</span>
+                        </div>
+                        <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                          <div
+                            className="h-full rounded-full bg-gradient-to-r from-red-600 to-red-400 transition-all duration-700"
+                            style={{ width: `${(p.quantity / maxProductQty) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-6">
+                <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6">
+                  <h2 className="text-sm font-semibold text-white mb-6">Order Status</h2>
+                  <div className="space-y-4">
+                    {data.orderStatuses.map((s) => {
+                      const pct =
+                        data.totalOrders > 0
+                          ? Math.round((s.count / data.totalOrders) * 100)
+                          : 0;
+                      return (
+                        <div key={s.status}>
+                          <div className="flex justify-between text-xs mb-1.5">
+                            <span className="text-white">{s.status}</span>
+                            <span className="text-white tabular-nums">{s.count} ({pct}%)</span>
+                          </div>
+                          <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all duration-700 ${statusColors[s.status] ?? "bg-white/10"}`}
+                              style={{ width: `${pct}%` }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6">
+                  <h2 className="text-sm font-semibold text-white mb-6">Summary</h2>
+                  <div className="space-y-4">
+                    <SummaryRow label="Avg Order Value" value={formatPrice(data.totalOrders > 0 ? Math.round(data.totalRevenue / data.totalOrders) : 0)} />
+                    <SummaryRow label="Total Items Sold" value={String(data.productSales.reduce((a, p) => a + p.quantity, 0))} />
+                    <SummaryRow label="Total Database Records" value={String(data.totalOrders + data.totalProducts + data.totalContacts + data.totalGameScores)} />
+                  </div>
                 </div>
               </div>
             </div>

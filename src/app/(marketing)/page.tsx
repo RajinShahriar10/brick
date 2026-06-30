@@ -44,9 +44,9 @@ export default function HomePage() {
       <Navbar />
       <main id="main-content" role="main">
         <Hero />
-        <MiniGame />
         <StorySection />
         <ProductShowcase />
+        <MiniGame />
         <FeaturesShowcase />
         <LuxurySpecs />
         <PerformanceMetrics />

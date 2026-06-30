@@ -42,9 +42,11 @@ export async function GET() {
     ]);
 
     const dailyRevenue: Record<string, number> = {};
+    const dailyOrders: Record<string, number> = {};
     ordersLast30Days.forEach((o) => {
       const day = o.createdAt.toISOString().slice(0, 10);
       dailyRevenue[day] = (dailyRevenue[day] ?? 0) + o.total;
+      dailyOrders[day] = (dailyOrders[day] ?? 0) + 1;
     });
 
     const orderStatuses = await Promise.all(
@@ -56,6 +58,14 @@ export async function GET() {
       )
     );
 
+    const productSales = await prisma.orderItem.groupBy({
+      by: ["name"],
+      _sum: { quantity: true },
+      _count: { id: true },
+      orderBy: { _sum: { quantity: "desc" } },
+      take: 10,
+    });
+
     return NextResponse.json({
       totalOrders,
       totalRevenue: totalRevenue._sum.total ?? 0,
@@ -64,7 +74,13 @@ export async function GET() {
       totalGameScores,
       recentOrders,
       dailyRevenue,
+      dailyOrders,
       orderStatuses,
+      productSales: productSales.map((p) => ({
+        name: p.name,
+        quantity: p._sum.quantity ?? 0,
+        orders: p._count.id,
+      })),
     });
   } catch {
     return NextResponse.json({ error: "Failed to fetch analytics" }, { status: 500 });
