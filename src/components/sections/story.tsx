@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
+import { motion, useScroll } from "framer-motion";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { Badge } from "@/components/ui/badge";
 
@@ -126,23 +126,33 @@ function BrickAnimation({ stageIndex }: { stageIndex: number }) {
 
 export function StorySection() {
   const ref = useRef<HTMLElement>(null);
-  const [progress, setProgress] = useState(0);
+  const [stageIndex, setStageIndex] = useState(0);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
 
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    setProgress(latest);
-  });
+  useEffect(() => {
+    const els = itemRefs.current.filter(Boolean) as HTMLDivElement[];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        let maxIdx = -1;
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = Number(entry.target.getAttribute("data-idx"));
+            if (idx > maxIdx) maxIdx = idx;
+          }
+        });
+        if (maxIdx >= 0) setStageIndex(maxIdx);
+      },
+      { threshold: 0.4 }
+    );
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
-  const stageIndex = Math.min(
-    progress < 0.35 ? 0 :
-    progress < 0.50 ? 1 :
-    progress < 0.65 ? 2 :
-    progress < 0.80 ? 3 : 4,
-    4
-  );
   const currentStage = timeline[stageIndex];
   const stageLabel = stageLabels[stageIndex];
 
@@ -178,6 +188,8 @@ export function StorySection() {
               {timeline.map((item, i) => (
                 <motion.div
                   key={item.year}
+                  ref={(el) => { itemRefs.current[i] = el; }}
+                  data-idx={i}
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
                   viewport={{ once: true, margin: "-150px" }}
