@@ -43,19 +43,15 @@ const timeline = [
   },
 ];
 
-const STAGES = 5;
+const stageLabels = ["Raw Clay", "CNC Shaping", "Kiln Firing", "Nano Coating", "Serialization"];
 
-function BrickAnimation({ progress }: { progress: number }) {
-  const stage = Math.min(progress * STAGES, STAGES - 0.01);
-  const step = Math.floor(stage);
-  const t = stage - step;
-
+function BrickAnimation({ step, progress }: { step: number; progress: number }) {
   const clay = "#8B5E3C";
   const brickBody = "#B84A28";
   const brickDark = "#8B3A20";
 
   return (
-    <svg viewBox="0 0 120 80" className="w-full h-full">
+    <motion.svg viewBox="0 0 120 80" className="w-full h-full">
       <defs>
         <linearGradient id="brickGrad" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={brickBody} />
@@ -78,80 +74,87 @@ function BrickAnimation({ progress }: { progress: number }) {
       </defs>
 
       {/* Stage 0: Raw clay mound */}
-      <g opacity={step < 1 ? 1 : Math.max(0, 1 - t)}>
-        <ellipse cx="60" cy="55" rx={25 + t * 10} ry={10 - t * 3} fill={clay} />
-        <ellipse cx="55" cy="48" rx={18 - t * 5} ry={14 - t * 4} fill="#A0704A" />
-        <ellipse cx="52" cy="42" rx={12 - t * 4} ry={10 - t * 3} fill="#B8845A" />
-        {step < 1 && (
+      <motion.g
+        animate={{ opacity: step === 0 ? 1 : step > 0 ? Math.max(0, 1 - (step - 0) * 0.4) : 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <ellipse cx="60" cy="55" rx={25} ry={10} fill={clay} />
+        <ellipse cx="55" cy="48" rx={18} ry={14} fill="#A0704A" />
+        <ellipse cx="52" cy="42" rx={12} ry={10} fill="#B8845A" />
+        {step === 0 && (
           <>
             <circle cx="48" cy="38" r="2" fill="#8B5E3C" opacity={0.5} />
             <circle cx="58" cy="44" r="1.5" fill="#8B5E3C" opacity={0.4} />
             <circle cx="54" cy="35" r="1" fill="#8B5E3C" opacity={0.3} />
           </>
         )}
-      </g>
+      </motion.g>
 
       {/* Stage 1: Shaped brick */}
-      <g opacity={step >= 1 ? 1 : t}>
+      <motion.g
+        animate={{ opacity: step >= 1 ? 1 : 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <rect x="15" y="20" width="90" height="40" rx="3" fill="url(#brickGrad)" />
         {step === 1 && (
-          <g opacity={t}>
+          <g>
             {[25, 30, 35, 40, 45, 50, 55].map((y) => (
               <line key={y} x1="20" y1={y} x2="100" y2={y} stroke="rgba(255,255,255,0.08)" strokeWidth="0.5" />
             ))}
           </g>
         )}
-        <g opacity={step >= 2 ? 1 : t * 0.3}>
-          <line x1="20" y1="30" x2="100" y2="30" stroke="rgba(0,0,0,0.08)" strokeWidth="0.5" />
-          <line x1="20" y1="50" x2="100" y2="50" stroke="rgba(0,0,0,0.08)" strokeWidth="0.5" />
+        <g>
+          {[30, 50].map((y) => (
+            <line key={y} x1="20" y1={y} x2="100" y2={y} stroke="rgba(0,0,0,0.08)" strokeWidth="0.5" />
+          ))}
         </g>
-      </g>
+      </motion.g>
 
       {/* Stage 2: Firing glow */}
-      {step >= 2 && (
-        <g opacity={step === 2 ? t : step >= 3 ? Math.max(0, 1 - (step - 2) * 0.5) : 1}>
-          <rect x="15" y="20" width="90" height="40" rx="3" fill="url(#heatGlow)" />
-          <rect x="15" y="20" width="90" height="40" rx="3" fill="rgba(255,68,0,0.15)" />
-        </g>
-      )}
+      <motion.g
+        animate={{ opacity: step >= 2 ? 1 : 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <rect x="15" y="20" width="90" height="40" rx="3" fill="url(#heatGlow)" />
+        <rect x="15" y="20" width="90" height="40" rx="3" fill="rgba(255,68,0,0.15)" />
+      </motion.g>
 
       {/* Stage 3: Coating sheen */}
-      {step >= 3 && (
-        <g opacity={step === 3 ? t : 1}>
-          <rect x="15" y="20" width="90" height="40" rx="3" fill="url(#coating)" />
-          <rect x="20" y="23" width="80" height="4" rx="2" fill="rgba(255,255,255,0.12)" />
-        </g>
-      )}
+      <motion.g
+        animate={{ opacity: step >= 3 ? 1 : 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <rect x="15" y="20" width="90" height="40" rx="3" fill="url(#coating)" />
+        <rect x="20" y="23" width="80" height="4" rx="2" fill="rgba(255,255,255,0.12)" />
+      </motion.g>
 
       {/* Stage 4: Serial number */}
-      {step >= 4 && (
-        <g opacity={step === 4 ? t : 1}>
-          <text
-            x="60" y="47"
-            textAnchor="middle"
-            fill="rgba(255,255,255,0.25)"
-            fontSize="5"
-            fontFamily="monospace"
-            letterSpacing="2"
-          >
-            BE-{padNum(t)}
-          </text>
-          <rect x="18" y="22" width="84" height="1" fill="rgba(255,255,255,0.08)" />
-        </g>
-      )}
+      <motion.g
+        animate={{ opacity: step >= 4 ? 1 : 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <text
+          x="60" y="47"
+          textAnchor="middle"
+          fill="rgba(255,255,255,0.25)"
+          fontSize="5"
+          fontFamily="monospace"
+          letterSpacing="2"
+        >
+          BE-{String(Math.floor(progress * 99999)).padStart(5, "0")}
+        </text>
+        <rect x="18" y="22" width="84" height="1" fill="rgba(255,255,255,0.08)" />
+      </motion.g>
 
       <ellipse cx="60" cy="68" rx="35" ry="4" fill="rgba(0,0,0,0.15)" />
-    </svg>
+    </motion.svg>
   );
-}
-
-function padNum(t: number) {
-  return String(Math.floor(t * 99999)).padStart(5, "0");
 }
 
 export function StorySection() {
   const ref = useRef<HTMLElement>(null);
-  const [brickProgress, setBrickProgress] = useState(0);
+  const [activeStep, setActiveStep] = useState(0);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
@@ -159,14 +162,24 @@ export function StorySection() {
 
   const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
   const brickOpacity = useTransform(scrollYProgress, [0, 0.1, 0.9, 1], [0, 1, 1, 0]);
-  const stageLabel = useTransform(scrollYProgress, [0, 0.2, 0.4, 0.6, 0.8, 1], [
-    "Raw Clay", "CNC Shaping", "Kiln Firing", "Nano Coating", "Serialization", "Final",
-  ]);
 
   useEffect(() => {
-    const unsub = scrollYProgress.on("change", setBrickProgress);
-    return () => unsub();
-  }, [scrollYProgress]);
+    const observers: IntersectionObserver[] = [];
+    itemRefs.current.forEach((el, i) => {
+      if (!el) return;
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setActiveStep(i);
+          }
+        },
+        { threshold: 0.4 }
+      );
+      observer.observe(el);
+      observers.push(observer);
+    });
+    return () => observers.forEach((o) => o.disconnect());
+  }, []);
 
   return (
     <section id="story" ref={ref} className="relative py-32 sm:py-48 px-6 bg-[#8d7a7a] overflow-hidden">
@@ -202,12 +215,12 @@ export function StorySection() {
               className="w-full h-full rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-4"
               style={{ opacity: brickOpacity }}
             >
-              <BrickAnimation progress={brickProgress} />
+              <BrickAnimation step={activeStep} progress={0.5} />
               <motion.p
                 className="text-[8px] text-white text-center mt-1 tracking-wider font-mono"
                 style={{ opacity: brickOpacity }}
               >
-                {stageLabel}
+                {stageLabels[activeStep] ?? "Final"}
               </motion.p>
             </motion.div>
           </div>
@@ -216,6 +229,7 @@ export function StorySection() {
             {timeline.map((item, i) => (
               <motion.div
                 key={item.year}
+                ref={(el) => { itemRefs.current[i] = el; }}
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true, margin: "-150px" }}
