@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ShoppingBag, User } from "lucide-react";
+import { Menu, X, ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 
@@ -76,13 +76,6 @@ export function Navbar() {
           </div>
 
           <div className="flex items-center gap-3">
-            <a
-              href="/auth/signin"
-              className="p-2 text-white hover:text-white transition-colors"
-              aria-label="Sign in to your account"
-            >
-              <User className="h-4 w-4" aria-hidden="true" />
-            </a>
             <a href="/checkout" aria-label="Order now">
               <MagneticButton size="sm" className="hidden sm:inline-flex">
                 <ShoppingBag className="h-3.5 w-3.5 mr-2" aria-hidden="true" />

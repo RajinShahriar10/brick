@@ -51,8 +51,8 @@ export default function SignInPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <Input id="email" name="email" label="Email" type="email" placeholder="admin@brickelite.com" required />
-          <Input id="password" name="password" label="Password" type="password" placeholder="••••••••" required />
+          <Input id="email" name="email" label="Email" type="email" placeholder="Email" required />
+          <Input id="password" name="password" label="Password" type="password" placeholder="Password" required />
           {error && <p className="text-xs text-red-400">{error}</p>}
           <Button type="submit" loading={loading} className="w-full">
             Sign In
