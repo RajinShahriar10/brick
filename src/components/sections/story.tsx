@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion, useScroll, useMotionValueEvent, useTransform } from "framer-motion";
+import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { Badge } from "@/components/ui/badge";
 
@@ -132,16 +132,17 @@ export function StorySection() {
     offset: ["start end", "end start"],
   });
 
-  const brickY = useTransform(scrollYProgress,
-    [0, 0.18, 0.22, 0.38, 0.42, 0.58, 0.62, 0.78, 0.82, 1],
-    [0, 0, 300, 300, 600, 600, 900, 900, 1200, 1200]
-  );
-
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     setProgress(latest);
   });
 
-  const stageIndex = Math.min(Math.floor(progress * (timeline.length - 1)), timeline.length - 1);
+  const stageIndex = Math.min(
+    progress < 0.35 ? 0 :
+    progress < 0.50 ? 1 :
+    progress < 0.65 ? 2 :
+    progress < 0.80 ? 3 : 4,
+    4
+  );
   const currentStage = timeline[stageIndex];
   const stageLabel = stageLabels[stageIndex];
 
@@ -163,9 +164,9 @@ export function StorySection() {
           </div>
         </ScrollReveal>
 
-        <div className="relative">
+        <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">
           {/* Timeline */}
-          <div className="md:w-1/2">
+          <div className="relative">
             <div className="absolute left-4 top-0 bottom-0 w-[1px] bg-white/5">
               <motion.div
                 className="w-full bg-gradient-to-b from-red-500 via-red-600 to-transparent"
@@ -216,28 +217,27 @@ export function StorySection() {
             </div>
           </div>
 
-          {/* Brick — moves down the right side as you scroll */}
-          <motion.div
-            className="hidden md:flex absolute right-0 top-0 w-1/2 max-w-sm justify-center"
-            style={{ y: brickY }}
-          >
-            <div className="rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-8">
-              <div className="h-40">
-                <BrickAnimation stageIndex={stageIndex} />
-              </div>
-              <div className="mt-4 text-center">
-                <p className="text-[10px] tracking-[0.3em] text-red-500/60 uppercase font-mono">{currentStage.year}</p>
-                <p className="text-xl font-bold text-white mt-1">{currentStage.title}</p>
-                <p className="text-[10px] text-white/40 mt-2 tracking-wider uppercase">{stageLabel}</p>
-                <div className="mt-6 pt-4 border-t border-white/5">
-                  <p className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20">
-                    {currentStage.stat}
-                  </p>
-                  <p className="text-xs text-white mt-1 tracking-wider">{currentStage.statLabel}</p>
+          {/* Brick — scrolls naturally alongside the timeline */}
+          <div className="flex flex-col items-center justify-start">
+            <div className="w-full max-w-sm">
+              <div className="rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-8">
+                <div className="h-40">
+                  <BrickAnimation stageIndex={stageIndex} />
+                </div>
+                <div className="mt-4 text-center">
+                  <p className="text-[10px] tracking-[0.3em] text-red-500/60 uppercase font-mono">{currentStage.year}</p>
+                  <p className="text-xl font-bold text-white mt-1">{currentStage.title}</p>
+                  <p className="text-[10px] text-white/40 mt-2 tracking-wider uppercase">{stageLabel}</p>
+                  <div className="mt-6 pt-4 border-t border-white/5">
+                    <p className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20">
+                      {currentStage.stat}
+                    </p>
+                    <p className="text-xs text-white mt-1 tracking-wider">{currentStage.statLabel}</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
