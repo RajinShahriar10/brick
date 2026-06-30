@@ -138,7 +138,7 @@ export function StorySection() {
     offset: ["start end", "end start"],
   });
 
-  const brickTop = useTransform(scrollYProgress, [0, 1], ["2%", "75%"]);
+  const brickY = useTransform(scrollYProgress, [0, 1], [0, 1200]);
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     setProgress(latest);
@@ -221,8 +221,8 @@ export function StorySection() {
 
           {/* Brick — moves down the right side as you scroll */}
           <motion.div
-            className="hidden md:flex absolute right-0 w-1/2 max-w-sm justify-center"
-            style={{ top: brickTop }}
+            className="hidden md:flex absolute right-0 top-0 w-1/2 max-w-sm justify-center"
+            style={{ y: brickY }}
           >
             <div className="rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-8">
               <BrickAnimation progress={progress} />
