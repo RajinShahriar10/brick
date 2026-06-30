@@ -138,7 +138,7 @@ export function StorySection() {
     offset: ["start end", "end start"],
   });
 
-  const brickY = useTransform(scrollYProgress, [0, 1], [0, 1200]);
+  const brickY = useTransform(scrollYProgress, [0, 0.2, 1], [0, 0, 1500]);
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     setProgress(latest);
