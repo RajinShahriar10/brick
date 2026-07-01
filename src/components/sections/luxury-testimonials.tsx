@@ -109,7 +109,7 @@ export function LuxuryTestimonials() {
   return (
     <section
       id="testimonials"
-      className="relative py-32 sm:py-48 px-6 bg-[#8d7a7a] overflow-hidden"
+      className="relative py-32 sm:py-48 px-6 bg-[#8d7a7a]"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
