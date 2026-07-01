@@ -1,19 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 
-interface MetricData {
-  id: string;
-  key: string;
-  value: number;
-  label: string;
-  suffix: string;
-  order: number;
-}
+const metrics = [
+  { id: "1", key: "bricks-admired", value: 1284923, label: "Bricks Admired", suffix: "" as const },
+  { id: "2", key: "architects-inspired", value: 58233, label: "Architects Inspired", suffix: "" as const },
+  { id: "3", key: "buildings-supported", value: 12493, label: "Buildings Supported", suffix: "" as const },
+  { id: "4", key: "years-reliability", value: 300, label: "Years of Reliability", suffix: "+" as const },
+];
 
 const metricIcons: Record<string, string> = {
   "bricks-admired": "👁️",
@@ -30,31 +27,6 @@ const metricGradients: string[] = [
 ];
 
 export function PerformanceMetrics() {
-  const [metrics, setMetrics] = useState<MetricData[] | null>(null);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    async function load() {
-      try {
-        const res = await fetch("/api/metrics");
-        if (!res.ok) throw new Error("Failed");
-        const data = await res.json();
-        setMetrics(Array.isArray(data) ? data : null);
-      } catch {
-        setError(true);
-      }
-    }
-    load();
-  }, []);
-
-  const defaultMetrics: MetricData[] = [
-    { id: "1", key: "bricks-admired", value: 1284923, label: "Bricks Admired", suffix: "", order: 0 },
-    { id: "2", key: "architects-inspired", value: 58233, label: "Architects Inspired", suffix: "", order: 1 },
-    { id: "3", key: "buildings-supported", value: 12493, label: "Buildings Supported", suffix: "", order: 2 },
-    { id: "4", key: "years-reliability", value: 300, label: "Years of Reliability", suffix: "+", order: 3 },
-  ];
-
-  const displayMetrics = metrics ?? defaultMetrics;
 
   return (
     <section id="performance" className="relative py-32 sm:py-48 px-6 overflow-hidden">
@@ -75,7 +47,7 @@ export function PerformanceMetrics() {
           </ScrollReveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            {displayMetrics.map((metric, i) => (
+            {metrics.map((metric, i) => (
               <motion.div
                 key={metric.key}
                 initial={{ opacity: 0, y: 40 }}
@@ -149,25 +121,7 @@ export function PerformanceMetrics() {
             ))}
           </div>
 
-          {/* Error state */}
-          {error && metrics === null && (
-            <p className="mt-8 text-center text-[10px] text-white tracking-wide">
-              Could not load live metrics — showing default values.
-            </p>
-          )}
 
-          {/* Live indicator */}
-          {metrics !== null && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="mt-8 text-center text-[10px] text-white tracking-wide"
-            >
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500/50 mr-2 align-middle" />
-              Live data from PostgreSQL
-            </motion.p>
-          )}
         </div>
     </section>
   );
