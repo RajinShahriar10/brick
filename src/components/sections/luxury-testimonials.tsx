@@ -6,7 +6,7 @@ import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { CloudinaryImage } from "@/components/ui/cloudinary-image";
 import { Badge } from "@/components/ui/badge";
 
-export interface TestimonialData {
+interface TestimonialData {
   content: string;
   author: string;
   role: string;
@@ -17,11 +17,62 @@ export interface TestimonialData {
 const CARD_WIDTH = 420;
 const GAP = 24;
 
-export function LuxuryTestimonials({ testimonials }: { testimonials: TestimonialData[] }) {
+const fallback: TestimonialData[] = [
+  {
+    content: "We specified BRICK ÉLITE for our flagship tower. The consistency across 50,000 units was extraordinary.",
+    author: "Isabella Rossi",
+    role: "Principal Architect, Studio ARP",
+    rating: 5,
+  },
+  {
+    content: "After 15 years in high-end construction, I've never seen anything like this. The nano-ceramic coating is not marketing hype.",
+    author: "James Crawford",
+    role: "Director, Crawford Construction Ltd.",
+    rating: 5,
+  },
+  {
+    content: "The acoustic properties are remarkable. We used BRICK ÉLITE for a concert hall interior.",
+    author: "Dr. Mei-Lin Chen",
+    role: "Acoustic Consultant, Resonance Engineering",
+    rating: 5,
+  },
+  {
+    content: "The thermal mass performance exceeds any standard brick we've tested. The vitrification process is a game-changer.",
+    author: "Prof. Sarah Vandenberg",
+    role: "Head of Sustainable Materials, MIT",
+    rating: 5,
+  },
+  {
+    content: "We purchased a single brick as a showpiece for our materials library. It has become the most-handled sample.",
+    author: "Oliver Grant",
+    role: "Design Director, Grant & Partners",
+    rating: 5,
+  },
+  {
+    content: "I was skeptical at the price point. Then I held one. The density, the perfectly machined edges — it's closer to a precision instrument.",
+    author: "Marcus Thorne",
+    role: "CEO, Thorne Development Group",
+    rating: 5,
+  },
+];
+
+export function LuxuryTestimonials() {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
   const [isPaused, setIsPaused] = useState(false);
+  const [testimonials, setTestimonials] = useState<TestimonialData[]>(fallback);
   const total = testimonials.length;
+
+  useEffect(() => {
+    fetch("/api/testimonials")
+      .then((r) => r.json())
+      .then((data: TestimonialData[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setTestimonials(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const next = useCallback(() => {
     setDirection(1);
@@ -94,11 +145,7 @@ export function LuxuryTestimonials({ testimonials }: { testimonials: Testimonial
                     <motion.div
                       key={`${idx}-${offset}`}
                       custom={direction}
-                      initial={{
-                        opacity: 0,
-                        scale: 0.88,
-                        filter: "blur(4px)",
-                      }}
+                      initial={false}
                       animate={{
                         opacity: isCenter ? 1 : 0.25,
                         scale: isCenter ? 1 : 0.88,

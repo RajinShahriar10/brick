@@ -4,7 +4,6 @@ import { ProductShowcase } from "@/components/sections/product-showcase";
 import { FeaturesShowcase } from "@/components/sections/features-showcase";
 import { Navbar } from "@/components/layout/navbar";
 import { LuxuryFooter } from "@/components/layout/luxury-footer";
-import { TestimonialsWrapper } from "@/components/sections/testimonials-wrapper";
 
 const LoadingScreen = dynamicImport(
   () => import("@/components/sections/loading-screen").then((m) => ({ default: m.LoadingScreen }))
@@ -20,6 +19,10 @@ const LuxurySpecs = dynamicImport(
 
 const PerformanceMetrics = dynamicImport(
   () => import("@/components/sections/performance-metrics").then((m) => ({ default: m.PerformanceMetrics }))
+);
+
+const LuxuryTestimonials = dynamicImport(
+  () => import("@/components/sections/luxury-testimonials").then((m) => ({ default: m.LuxuryTestimonials }))
 );
 
 const MiniGame = dynamicImport(
@@ -49,7 +52,7 @@ export default function HomePage() {
         <FeaturesShowcase />
         <LuxurySpecs />
         <PerformanceMetrics />
-        <TestimonialsWrapper />
+        <LuxuryTestimonials />
         <FAQ />
         <ContactForm />
       </main>
