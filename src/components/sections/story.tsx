@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, useScroll } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { Badge } from "@/components/ui/badge";
 
@@ -73,7 +73,7 @@ function BrickAnimation({ stageIndex }: { stageIndex: number }) {
         </linearGradient>
       </defs>
 
-      <motion.g animate={{ opacity: stageIndex === 0 ? 1 : 0 }} transition={{ duration: dur }}>
+      <motion.g animate={{ opacity: stageIndex === 0 ? 1 : 0, y: stageIndex === 0 ? 0 : 20 }} transition={{ duration: dur }}>
         <ellipse cx="60" cy="55" rx={25} ry={10} fill={clay} />
         <ellipse cx="55" cy="48" rx={18} ry={14} fill="#A0704A" />
         <ellipse cx="52" cy="42" rx={12} ry={10} fill="#B8845A" />
@@ -82,20 +82,20 @@ function BrickAnimation({ stageIndex }: { stageIndex: number }) {
         <circle cx="54" cy="35" r="1" fill="#8B5E3C" opacity={0.3} />
       </motion.g>
 
-      <motion.g animate={{ opacity: stageIndex >= 1 ? 1 : 0 }} transition={{ duration: dur }}>
+      <motion.g animate={{ opacity: stageIndex >= 1 ? 1 : 0, y: stageIndex >= 1 ? 0 : -20 }} transition={{ duration: dur }}>
         <rect x="15" y="20" width="90" height="40" rx="3" fill="url(#brickGrad)" />
         {[30, 50].map((y) => (
           <line key={y} x1="20" y1={y} x2="100" y2={y} stroke="rgba(0,0,0,0.08)" strokeWidth="0.5" />
         ))}
       </motion.g>
 
-      <motion.g animate={{ opacity: stageIndex === 1 ? 1 : 0 }} transition={{ duration: dur }}>
+      <motion.g animate={{ opacity: stageIndex === 1 ? 1 : 0, y: stageIndex === 1 ? 0 : 15 }} transition={{ duration: dur }}>
         {[25, 30, 35, 40, 45, 50, 55].map((y) => (
           <line key={y} x1="20" y1={y} x2="100" y2={y} stroke="rgba(255,255,255,0.08)" strokeWidth="0.5" />
         ))}
       </motion.g>
 
-      <motion.g animate={{ opacity: stageIndex === 2 ? 1 : 0 }} transition={{ duration: dur }}>
+      <motion.g animate={{ opacity: stageIndex === 2 ? 1 : 0, y: stageIndex === 2 ? 0 : 15 }} transition={{ duration: dur }}>
         <rect x="15" y="20" width="90" height="40" rx="3" fill="url(#heatGlow)" />
         <rect x="15" y="20" width="90" height="40" rx="3" fill="rgba(255,68,0,0.15)" />
       </motion.g>
@@ -133,6 +133,8 @@ export function StorySection() {
     target: ref,
     offset: ["start end", "end start"],
   });
+
+  const clayY = useTransform(scrollYProgress, [0, 1], [0, 280]);
 
   useEffect(() => {
     const els = itemRefs.current.filter(Boolean) as HTMLDivElement[];
@@ -229,9 +231,9 @@ export function StorySection() {
             </div>
           </div>
 
-          {/* Brick — scrolls naturally alongside the timeline */}
-          <div className="flex flex-col items-center justify-start">
-            <div className="w-full max-w-sm">
+          {/* Brick — sticky with scroll-driven Y motion so it swaps down with the scroll */}
+          <div className="relative md:sticky md:top-32 md:self-start flex flex-col items-center justify-start">
+            <motion.div style={{ y: clayY }} className="w-full max-w-sm">
               <div className="rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-8">
                 <div className="h-40">
                   <BrickAnimation stageIndex={stageIndex} />
@@ -248,7 +250,7 @@ export function StorySection() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
