@@ -82,7 +82,7 @@ export function LuxuryTestimonials({ testimonials }: { testimonials: Testimonial
         </ScrollReveal>
 
         <div className="relative flex items-center justify-center min-h-[320px]">
-          <div className="relative w-full max-w-[900px] overflow-hidden">
+          <div className="relative w-full max-w-[900px]">
             <div className="flex items-center justify-center gap-6">
               <AnimatePresence mode="popLayout" custom={direction}>
                 {visibleIndices.map((offset) => {
