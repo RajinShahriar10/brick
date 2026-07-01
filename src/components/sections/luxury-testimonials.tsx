@@ -5,9 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { CloudinaryImage } from "@/components/ui/cloudinary-image";
 import { Badge } from "@/components/ui/badge";
-import { testimonials as fallback } from "@/constants/site";
 
-interface Testimonial {
+export interface TestimonialData {
   content: string;
   author: string;
   role: string;
@@ -18,19 +17,10 @@ interface Testimonial {
 const CARD_WIDTH = 420;
 const GAP = 24;
 
-export function LuxuryTestimonials() {
+export function LuxuryTestimonials({ testimonials }: { testimonials: TestimonialData[] }) {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
   const [isPaused, setIsPaused] = useState(false);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>(fallback);
-
-  useEffect(() => {
-    fetch("/api/testimonials")
-      .then((r) => r.json())
-      .then((data) => { if (Array.isArray(data) && data.length > 0) setTestimonials(data); })
-      .catch(() => {});
-  }, []);
-
   const total = testimonials.length;
 
   const next = useCallback(() => {
@@ -54,6 +44,17 @@ export function LuxuryTestimonials() {
 
   const visibleIndices = [-1, 0, 1];
 
+  if (total === 0) {
+    return (
+      <section id="testimonials" className="relative py-32 sm:py-48 px-6 bg-[#8d7a7a]">
+        <div className="mx-auto max-w-7xl text-center">
+          <Badge className="mb-4 tracking-[0.2em]">Testimonials</Badge>
+          <p className="text-sm text-white/40">No testimonials yet.</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section
       id="testimonials"
@@ -61,7 +62,6 @@ export function LuxuryTestimonials() {
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Ambient glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-red-600/[0.02] blur-3xl pointer-events-none" />
 
       <div className="mx-auto max-w-7xl relative">
@@ -81,7 +81,6 @@ export function LuxuryTestimonials() {
           </div>
         </ScrollReveal>
 
-        {/* Carousel */}
         <div className="relative flex items-center justify-center min-h-[320px]">
           <div className="relative w-full max-w-[900px] overflow-hidden">
             <div className="flex items-center justify-center gap-6">
@@ -123,7 +122,6 @@ export function LuxuryTestimonials() {
                         }
                       }}
                     >
-                      {/* Glass card */}
                       <div
                         className={`relative rounded-2xl p-8 backdrop-blur-xl border transition-all duration-500 ${
                           isCenter
@@ -131,13 +129,9 @@ export function LuxuryTestimonials() {
                             : "bg-white/[0.015] border-white/[0.03]"
                         }`}
                       >
-                        {/* Glass shine overlay */}
                         <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-white/[0.04] to-transparent pointer-events-none" />
-
-                        {/* Decorative top bar */}
                         <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-red-500/20 to-transparent" />
 
-                        {/* Quote mark */}
                         <span
                           className={`absolute top-5 right-7 text-5xl leading-none font-serif transition-opacity duration-500 ${
                             isCenter ? "text-red-500/15" : "text-white/[0.04]"
@@ -146,12 +140,10 @@ export function LuxuryTestimonials() {
                           &rdquo;
                         </span>
 
-                        {/* Content */}
                         <div className="relative z-10 pt-4">
-                          {/* Star rating */}
-                          {(t as { rating?: number }).rating && (
+                          {t.rating && (
                             <div className="flex items-center gap-0.5 mb-3">
-                              {Array.from({ length: (t as { rating: number }).rating }).map((_, i) => (
+                              {Array.from({ length: t.rating }).map((_, i) => (
                                 <svg key={i} width="12" height="12" viewBox="0 0 12 12" fill="none" className="text-red-400">
                                   <path d="M6 0L7.5 4.5L12 4.5L8.5 7.5L10 12L6 9L2 12L3.5 7.5L0 4.5L4.5 4.5L6 0Z" fill="currentColor" />
                                 </svg>
@@ -166,11 +158,10 @@ export function LuxuryTestimonials() {
                             &ldquo;{t.content}&rdquo;
                           </p>
 
-                          {/* Author */}
                           <div className="flex items-center gap-3 pt-4 border-t border-white/[0.06]">
-                            {(t as { avatar?: string }).avatar ? (
+                            {t.avatar ? (
                               <CloudinaryImage
-                                src={(t as { avatar?: string }).avatar!}
+                                src={t.avatar}
                                 alt={t.author}
                                 width={36}
                                 height={36}
@@ -210,13 +201,13 @@ export function LuxuryTestimonials() {
                               >
                                 {t.author}
                               </p>
-                              {(t as { role?: string }).role && (
+                              {t.role && (
                                 <p
                                   className={`text-[10px] tracking-wider mt-0.5 transition-colors duration-500 ${
                                     isCenter ? "text-white" : "text-white"
                                   }`}
                                 >
-                                  {(t as { role?: string }).role}
+                                  {t.role}
                                 </p>
                               )}
                             </div>
@@ -231,9 +222,7 @@ export function LuxuryTestimonials() {
           </div>
         </div>
 
-        {/* Controls */}
         <div className="flex items-center justify-center gap-6 mt-10">
-          {/* Dots */}
           <div className="flex items-center gap-2">
             {testimonials.map((_, i) => (
               <button
@@ -256,27 +245,14 @@ export function LuxuryTestimonials() {
             ))}
           </div>
 
-          {/* Nav arrows */}
           <div className="flex items-center gap-2">
             <button
               onClick={prev}
               className="w-8 h-8 rounded-full border border-white/[0.06] flex items-center justify-center hover:bg-white/[0.04] hover:border-white/[0.12] transition-all duration-300 group"
               aria-label="Previous"
             >
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                className="text-white group-hover:text-white transition-colors"
-              >
-                <path
-                  d="M7 2L3 6L7 10"
-                  stroke="currentColor"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="text-white group-hover:text-white transition-colors">
+                <path d="M7 2L3 6L7 10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
             <button
@@ -284,26 +260,13 @@ export function LuxuryTestimonials() {
               className="w-8 h-8 rounded-full border border-white/[0.06] flex items-center justify-center hover:bg-white/[0.04] hover:border-white/[0.12] transition-all duration-300 group"
               aria-label="Next"
             >
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                className="text-white group-hover:text-white transition-colors"
-              >
-                <path
-                  d="M5 2L9 6L5 10"
-                  stroke="currentColor"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="text-white group-hover:text-white transition-colors">
+                <path d="M5 2L9 6L5 10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
           </div>
         </div>
 
-        {/* Edge fades */}
         <div className="absolute left-0 top-0 bottom-0 w-40 bg-gradient-to-r from-[#8d7a7a] to-transparent pointer-events-none z-10" />
         <div className="absolute right-0 top-0 bottom-0 w-40 bg-gradient-to-l from-[#8d7a7a] to-transparent pointer-events-none z-10" />
       </div>
