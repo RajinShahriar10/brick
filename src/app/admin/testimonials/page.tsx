@@ -117,7 +117,7 @@ export default function AdminTestimonialsPage() {
   return (
     <div className="flex min-h-screen bg-zinc-950">
       <AdminSidebar />
-      <main className="ml-60 flex-1 p-8">
+      <main className="flex-1 p-4 sm:p-8 lg:ml-60 pt-16 lg:pt-8">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-bold text-white">Testimonials</h1>
           <button
@@ -209,8 +209,8 @@ export default function AdminTestimonialsPage() {
         ) : testimonials.length === 0 ? (
           <p className="text-xs text-white">No testimonials yet.</p>
         ) : (
-          <div className="rounded-xl border border-white/5 bg-white/[0.02] overflow-hidden">
-            <table className="w-full">
+          <div className="rounded-xl border border-white/5 bg-white/[0.02] overflow-x-auto">
+            <table className="w-full min-w-[600px]">
               <thead>
                 <tr className="border-b border-white/5">
                   <th className="w-8 px-4 py-4" />
@@ -310,3 +310,4 @@ export default function AdminTestimonialsPage() {
     </div>
   );
 }
+

@@ -2,6 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { AdminSidebar } from "@/components/admin/sidebar";
+import {
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import { ShoppingCart, DollarSign, Package, MessageSquare, Gamepad2 } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 
@@ -17,12 +31,12 @@ interface Analytics {
   productSales: { name: string; quantity: number; orders: number }[];
 }
 
-const statusColors: Record<string, string> = {
-  PENDING: "bg-amber-500",
-  PROCESSING: "bg-blue-500",
-  SHIPPED: "bg-purple-500",
-  DELIVERED: "bg-emerald-500",
-  CANCELLED: "bg-red-500",
+const STATUS_COLORS: Record<string, string> = {
+  PENDING: "#f59e0b",
+  PROCESSING: "#3b82f6",
+  SHIPPED: "#a855f7",
+  DELIVERED: "#10b981",
+  CANCELLED: "#ef4444",
 };
 
 export default function AdminAnalyticsPage() {
@@ -37,24 +51,31 @@ export default function AdminAnalyticsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const days = data
-    ? Object.entries(data.dailyRevenue).sort(([a], [b]) => a.localeCompare(b))
+  const revenueData = data
+    ? Object.entries(data.dailyRevenue)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([date, revenue]) => ({ date: date.slice(5), revenue }))
     : [];
 
-  const maxRevenue = Math.max(...days.map(([, v]) => v), 1);
-  const maxOrders = Math.max(...days.map(([d]) => data?.dailyOrders[d] ?? 0), 1);
-  const maxProductQty = Math.max(...(data?.productSales.map((p) => p.quantity) ?? []), 1);
+  const ordersData = data
+    ? Object.entries(data.dailyOrders)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([date, count]) => ({ date: date.slice(5), orders: count }))
+    : [];
+
+  const statusData = data?.orderStatuses ?? [];
+  const productData = data?.productSales ?? [];
 
   return (
     <div className="flex min-h-screen bg-zinc-950">
       <AdminSidebar />
-      <main className="ml-60 flex-1 p-8">
+      <main className="flex-1 p-4 sm:p-8 lg:ml-60 pt-16 lg:pt-8">
         <h1 className="text-2xl font-bold text-white mb-8">Analytics</h1>
 
         {loading ? (
-          <p className="text-xs text-white">Loading...</p>
+          <p className="text-xs text-white/40">Loading...</p>
         ) : !data ? (
-          <p className="text-xs text-white">Failed to load analytics.</p>
+          <p className="text-xs text-red-400">Failed to load analytics.</p>
         ) : (
           <div className="space-y-8">
             {/* Stat cards */}
@@ -66,120 +87,208 @@ export default function AdminAnalyticsPage() {
               <StatCard icon={Gamepad2} label="Game Plays" value={data.totalGameScores} />
             </div>
 
-            {/* Revenue + Orders chart */}
+            {/* Revenue area chart + Orders bar chart */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6">
-                <h2 className="text-sm font-semibold text-white mb-6">Daily Revenue (Last 30 Days)</h2>
-                <div className="flex items-end gap-[3px] h-32">
-                  {days.map(([day, rev]) => (
-                    <div key={day} className="flex-1 relative group">
-                      <div
-                        className="w-full bg-gradient-to-t from-emerald-600/30 to-emerald-500/60 rounded-t hover:from-emerald-500/40 hover:to-emerald-400/70 transition-all cursor-pointer"
-                        style={{ height: `${(rev / maxRevenue) * 100}%` }}
-                      >
-                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black/80 text-[10px] text-white px-2 py-1 rounded">
-                          {formatPrice(rev)}
-                        </div>
-                      </div>
-                      {days.length <= 15 && (
-                        <p className="text-[8px] text-white mt-1 text-center">{day.slice(5)}</p>
-                      )}
-                    </div>
-                  ))}
+              <ChartCard title="Daily Revenue (Last 30 Days)">
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={revenueData}>
+                      <defs>
+                        <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#10b981" stopOpacity={0.3} />
+                          <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                      <XAxis
+                        dataKey="date"
+                        tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 10 }}
+                        axisLine={false}
+                        tickLine={false}
+                        interval="preserveStartEnd"
+                      />
+                      <YAxis
+                        tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 10 }}
+                        axisLine={false}
+                        tickLine={false}
+                        tickFormatter={(v) => `$${v}`}
+                      />
+                      <Tooltip content={<ChartTooltip label="Revenue" formatter={(v: number) => formatPrice(v)} />} />
+                      <Area
+                        type="monotone"
+                        dataKey="revenue"
+                        stroke="#10b981"
+                        strokeWidth={2}
+                        fill="url(#revenueGrad)"
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
                 </div>
-              </div>
+              </ChartCard>
 
-              <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6">
-                <h2 className="text-sm font-semibold text-white mb-6">Daily Orders (Last 30 Days)</h2>
-                <div className="flex items-end gap-[3px] h-32">
-                  {days.map(([day]) => {
-                    const count = data.dailyOrders[day] ?? 0;
-                    return (
-                      <div key={day} className="flex-1 relative group">
-                        <div
-                          className="w-full bg-gradient-to-t from-red-600/30 to-red-500/60 rounded-t hover:from-red-500/40 hover:to-red-400/70 transition-all cursor-pointer"
-                          style={{ height: `${(count / maxOrders) * 100}%` }}
-                        >
-                          <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black/80 text-[10px] text-white px-2 py-1 rounded">
-                            {count} order{count !== 1 ? "s" : ""}
-                          </div>
-                        </div>
-                        {days.length <= 15 && (
-                          <p className="text-[8px] text-white mt-1 text-center">{day.slice(5)}</p>
-                        )}
-                      </div>
-                    );
-                  })}
+              <ChartCard title="Daily Orders (Last 30 Days)">
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={ordersData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                      <XAxis
+                        dataKey="date"
+                        tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 10 }}
+                        axisLine={false}
+                        tickLine={false}
+                        interval="preserveStartEnd"
+                      />
+                      <YAxis
+                        tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 10 }}
+                        axisLine={false}
+                        tickLine={false}
+                        allowDecimals={false}
+                      />
+                      <Tooltip content={<ChartTooltip label="Orders" />} />
+                      <Bar dataKey="orders" fill="#ef4444" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
                 </div>
-              </div>
+              </ChartCard>
             </div>
 
             {/* Product sales + Order status */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6">
-                <h2 className="text-sm font-semibold text-white mb-6">Top Products Sold</h2>
-                {data.productSales.length === 0 ? (
-                  <p className="text-xs text-white">No sales data yet.</p>
+              <ChartCard title="Top Products Sold">
+                {productData.length === 0 ? (
+                  <p className="text-xs text-white/40 py-8 text-center">No sales data yet.</p>
                 ) : (
-                  <div className="space-y-4">
-                    {data.productSales.map((p, i) => (
-                      <div key={p.name}>
-                        <div className="flex justify-between text-xs mb-1.5">
-                          <span className="text-white truncate mr-2">{i + 1}. {p.name}</span>
-                          <span className="text-white tabular-nums shrink-0">{p.quantity} sold</span>
-                        </div>
-                        <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                          <div
-                            className="h-full rounded-full bg-gradient-to-r from-red-600 to-red-400 transition-all duration-700"
-                            style={{ width: `${(p.quantity / maxProductQty) * 100}%` }}
-                          />
-                        </div>
-                      </div>
-                    ))}
+                  <div className="h-72">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart
+                        data={productData}
+                        layout="vertical"
+                        margin={{ left: 0, right: 0, top: 0, bottom: 0 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
+                        <XAxis
+                          type="number"
+                          tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 10 }}
+                          axisLine={false}
+                          tickLine={false}
+                        />
+                        <YAxis
+                          dataKey="name"
+                          type="category"
+                          tick={{ fill: "rgba(255,255,255,0.6)", fontSize: 10 }}
+                          axisLine={false}
+                          tickLine={false}
+                          width={100}
+                        />
+                        <Tooltip content={<ProductTooltip />} />
+                        <Bar dataKey="quantity" fill="#ef4444" radius={[0, 4, 4, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
                   </div>
                 )}
-              </div>
+              </ChartCard>
 
               <div className="space-y-6">
-                <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6">
-                  <h2 className="text-sm font-semibold text-white mb-6">Order Status</h2>
-                  <div className="space-y-4">
-                    {data.orderStatuses.map((s) => {
-                      const pct =
-                        data.totalOrders > 0
-                          ? Math.round((s.count / data.totalOrders) * 100)
-                          : 0;
-                      return (
-                        <div key={s.status}>
-                          <div className="flex justify-between text-xs mb-1.5">
-                            <span className="text-white">{s.status}</span>
-                            <span className="text-white tabular-nums">{s.count} ({pct}%)</span>
-                          </div>
-                          <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                            <div
-                              className={`h-full rounded-full transition-all duration-700 ${statusColors[s.status] ?? "bg-white/10"}`}
-                              style={{ width: `${pct}%` }}
-                            />
-                          </div>
+                <ChartCard title="Order Status">
+                  <div className="h-64 flex flex-col sm:flex-row items-center justify-center">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={statusData}
+                          dataKey="count"
+                          nameKey="status"
+                          cx="50%"
+                          cy="50%"
+                          outerRadius={80}
+                          innerRadius={50}
+                          paddingAngle={4}
+                        >
+                          {statusData.map((entry) => (
+                            <Cell key={entry.status} fill={STATUS_COLORS[entry.status] ?? "#666"} />
+                          ))}
+                        </Pie>
+                        <Tooltip content={<ChartTooltip />} />
+                      </PieChart>
+                    </ResponsiveContainer>
+                    <div className="flex sm:flex-col gap-3 sm:gap-2 flex-wrap justify-center sm:ml-4">
+                      {statusData.map((s) => (
+                        <div key={s.status} className="flex items-center gap-2 text-xs">
+                          <span
+                            className="w-2.5 h-2.5 rounded-full shrink-0"
+                            style={{ backgroundColor: STATUS_COLORS[s.status] ?? "#666" }}
+                          />
+                          <span className="text-white/60 whitespace-nowrap">{s.status}</span>
+                          <span className="text-white tabular-nums font-medium">{s.count}</span>
                         </div>
-                      );
-                    })}
+                      ))}
+                    </div>
                   </div>
-                </div>
+                </ChartCard>
 
-                <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6">
-                  <h2 className="text-sm font-semibold text-white mb-6">Summary</h2>
+                <ChartCard title="Summary">
                   <div className="space-y-4">
-                    <SummaryRow label="Avg Order Value" value={formatPrice(data.totalOrders > 0 ? Math.round(data.totalRevenue / data.totalOrders) : 0)} />
-                    <SummaryRow label="Total Items Sold" value={String(data.productSales.reduce((a, p) => a + p.quantity, 0))} />
-                    <SummaryRow label="Total Database Records" value={String(data.totalOrders + data.totalProducts + data.totalContacts + data.totalGameScores)} />
+                    <SummaryRow
+                      label="Avg Order Value"
+                      value={formatPrice(
+                        data.totalOrders > 0
+                          ? Math.round(data.totalRevenue / data.totalOrders)
+                          : 0
+                      )}
+                    />
+                    <SummaryRow
+                      label="Total Items Sold"
+                      value={String(productData.reduce((a, p) => a + p.quantity, 0))}
+                    />
+                    <SummaryRow
+                      label="Total Database Records"
+                      value={String(
+                        data.totalOrders +
+                          data.totalProducts +
+                          data.totalContacts +
+                          data.totalGameScores
+                      )}
+                    />
                   </div>
-                </div>
+                </ChartCard>
               </div>
             </div>
           </div>
         )}
       </main>
+    </div>
+  );
+}
+
+function ChartTooltip({ active, payload, label, formatter }: any) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="bg-black/90 border border-white/10 rounded-lg px-3 py-2 text-xs text-white shadow-lg">
+      {label && <p className="text-white/50 mb-0.5">{label}</p>}
+      {payload.map((entry: any, i: number) => (
+        <p key={i} className="font-medium">
+          {formatter ? formatter(entry.value) : entry.value}
+        </p>
+      ))}
+    </div>
+  );
+}
+
+function ProductTooltip({ active, payload }: any) {
+  if (!active || !payload?.length) return null;
+  const d = payload[0].payload;
+  return (
+    <div className="bg-black/90 border border-white/10 rounded-lg px-3 py-2 text-xs text-white shadow-lg">
+      <p className="font-medium mb-0.5">{d.name}</p>
+      <p>{d.quantity} sold ({d.orders} orders)</p>
+    </div>
+  );
+}
+
+function ChartCard({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6">
+      <h2 className="text-sm font-semibold text-white mb-6">{title}</h2>
+      {children}
     </div>
   );
 }
@@ -196,8 +305,8 @@ function StatCard({
   return (
     <div className="rounded-xl border border-white/5 bg-white/[0.02] p-5 backdrop-blur-xl">
       <div className="flex items-center justify-between mb-3">
-        <p className="text-[10px] uppercase tracking-widest text-white">{label}</p>
-        <Icon className="h-3.5 w-3.5 text-white" />
+        <p className="text-[10px] uppercase tracking-widest text-white/60">{label}</p>
+        <Icon className="h-3.5 w-3.5 text-white/30" />
       </div>
       <p className="text-xl font-bold text-white tabular-nums">{value}</p>
     </div>
@@ -207,7 +316,7 @@ function StatCard({
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
-      <span className="text-xs text-white">{label}</span>
+      <span className="text-xs text-white/60">{label}</span>
       <span className="text-xs font-medium text-white tabular-nums">{value}</span>
     </div>
   );

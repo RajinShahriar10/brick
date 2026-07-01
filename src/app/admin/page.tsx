@@ -56,7 +56,7 @@ export default async function AdminDashboardPage() {
   return (
     <div className="flex">
       <AdminSidebar />
-      <main className="ml-60 flex-1 p-8">
+      <main className="flex-1 p-4 sm:p-8 lg:ml-60 pt-16 lg:pt-8">
         <h1 className="text-2xl font-bold text-white mb-8">Dashboard</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-10">
@@ -95,3 +95,4 @@ export default async function AdminDashboardPage() {
     </div>
   );
 }
+

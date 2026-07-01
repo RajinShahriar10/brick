@@ -49,7 +49,7 @@ export default function AdminUsersPage() {
   return (
     <div className="flex min-h-screen bg-zinc-950">
       <AdminSidebar />
-      <main className="ml-60 flex-1 p-8">
+      <main className="flex-1 p-4 sm:p-8 lg:ml-60 pt-16 lg:pt-8">
         <h1 className="text-2xl font-bold text-white mb-8">Users</h1>
 
         {loading ? (
@@ -57,8 +57,8 @@ export default function AdminUsersPage() {
         ) : users.length === 0 ? (
           <p className="text-xs text-white">No users found.</p>
         ) : (
-          <div className="rounded-xl border border-white/5 bg-white/[0.02] overflow-hidden">
-            <table className="w-full">
+          <div className="rounded-xl border border-white/5 bg-white/[0.02] overflow-x-auto">
+            <table className="w-full min-w-[600px]">
               <thead>
                 <tr className="border-b border-white/5">
                   <th className="text-left px-6 py-4 text-[11px] uppercase tracking-widest text-white font-medium">User</th>
@@ -142,3 +142,4 @@ export default function AdminUsersPage() {
     </div>
   );
 }
+

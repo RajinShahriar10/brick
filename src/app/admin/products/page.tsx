@@ -81,7 +81,7 @@ export default function AdminProductsPage() {
   return (
     <div className="flex min-h-screen bg-zinc-950">
       <AdminSidebar />
-      <main className="ml-60 flex-1 p-8">
+      <main className="flex-1 p-4 sm:p-8 lg:ml-60 pt-16 lg:pt-8">
         <h1 className="text-2xl font-bold text-white mb-8">Products</h1>
 
         {loading ? (
@@ -202,3 +202,4 @@ export default function AdminProductsPage() {
     </div>
   );
 }
+
