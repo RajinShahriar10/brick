@@ -5,7 +5,6 @@ import { motion, useScroll, useTransform, useMotionValue } from "framer-motion";
 import { ChevronDown, ArrowRight } from "lucide-react";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { Badge } from "@/components/ui/badge";
-import { formatPrice } from "@/lib/utils";
 import dynamic from "next/dynamic";
 
 const InteractiveScene = dynamic(
@@ -85,7 +84,6 @@ function AnimatedHeadline() {
 
 function HeroContent() {
   const { mouseX, mouseY } = useMouseParallax();
-  const [price, setPrice] = useState(1499);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -96,11 +94,6 @@ function HeroContent() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 0.7], [1, 0.92]);
   const heroY = useTransform(scrollYProgress, [0, 0.7], [0, 80]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setPrice(1499), 100);
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <div
@@ -163,24 +156,6 @@ function HeroContent() {
           transition={{ duration: 0.8, delay: 2, ease: [0.25, 0.1, 0.25, 1] }}
           className="sm:hidden mt-8 h-px w-16 mx-auto bg-gradient-to-r from-transparent via-red-400/40 to-transparent"
         />
-
-        {/* Price */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 2.2 }}
-          className="mt-6 sm:mt-6 text-3xl sm:text-4xl font-bold text-white"
-        >
-          {formatPrice(price)}
-        </motion.p>
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 2.3 }}
-          className="text-xs text-white mt-1"
-        >
-          Complimentary worldwide shipping
-        </motion.p>
 
         {/* CTA Buttons */}
         <motion.div
