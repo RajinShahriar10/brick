@@ -9,10 +9,10 @@ import { MagneticButton } from "@/components/ui/magnetic-button";
 const navItems = [
   { title: "Story", href: "#story" },
   { title: "The Brick", href: "#product" },
+  { title: "Challenge", href: "#game" },
   { title: "Features", href: "#features" },
   { title: "Specs", href: "#specs" },
   { title: "Testimonials", href: "#testimonials" },
-  { title: "Challenge", href: "#game" },
 ];
 
 export function Navbar() {
@@ -66,6 +66,10 @@ export function Navbar() {
               <a
                 key={item.href}
                 href={item.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.querySelector(item.href)?.scrollIntoView({ behavior: "smooth" });
+                }}
                 className="relative text-xs tracking-wider text-white hover:text-white transition-colors duration-300 group"
                 role="listitem"
               >
@@ -112,7 +116,11 @@ export function Navbar() {
                 <a
                   key={item.href}
                   href={item.href}
-                  onClick={() => setMobileOpen(false)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setMobileOpen(false);
+                    document.querySelector(item.href)?.scrollIntoView({ behavior: "smooth" });
+                  }}
                   className="text-lg tracking-wider text-white hover:text-white transition-colors"
                   role="listitem"
                 >
