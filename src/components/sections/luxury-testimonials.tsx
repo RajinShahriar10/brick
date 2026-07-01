@@ -5,7 +5,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { CloudinaryImage } from "@/components/ui/cloudinary-image";
 import { Badge } from "@/components/ui/badge";
-import { testimonials } from "@/constants/site";
+import { testimonials as fallback } from "@/constants/site";
+
+interface Testimonial {
+  content: string;
+  author: string;
+  role: string;
+  rating: number;
+  avatar?: string;
+}
 
 const CARD_WIDTH = 420;
 const GAP = 24;
@@ -14,6 +22,15 @@ export function LuxuryTestimonials() {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
   const [isPaused, setIsPaused] = useState(false);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(fallback);
+
+  useEffect(() => {
+    fetch("/api/testimonials")
+      .then((r) => r.json())
+      .then((data) => { if (Array.isArray(data) && data.length > 0) setTestimonials(data); })
+      .catch(() => {});
+  }, []);
+
   const total = testimonials.length;
 
   const next = useCallback(() => {
