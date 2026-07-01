@@ -200,9 +200,9 @@ export function StorySection() {
           </div>
         </ScrollReveal>
 
-        <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">
-          {/* Timeline */}
-          <div className="relative">
+          <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">
+            {/* Timeline — order-2 on mobile so clay appears first and sticks */}
+            <div className="relative order-2 md:order-1">
             <div className="absolute left-4 top-0 bottom-0 w-[1px] bg-white/5">
               <motion.div
                 className="w-full bg-gradient-to-b from-red-500 via-red-600 to-transparent"
@@ -256,7 +256,7 @@ export function StorySection() {
           </div>
 
           {/* Brick — sticky with scroll-driven Y motion so it swaps down with the scroll */}
-          <div ref={clayRef} className="relative md:sticky md:top-32 md:self-start flex flex-col items-center justify-start">
+          <div ref={clayRef} className="sticky top-16 md:top-32 self-start order-1 md:order-2 flex flex-col items-center justify-start">
             <motion.div style={{ y: clayY }} className="w-full max-w-sm">
               <div className="rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-8">
                 <div className="h-40">
