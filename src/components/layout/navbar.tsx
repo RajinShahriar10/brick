@@ -68,7 +68,11 @@ export function Navbar() {
                 href={item.href}
                 onClick={(e) => {
                   e.preventDefault();
-                  document.querySelector(item.href)?.scrollIntoView({ behavior: "smooth" });
+                  const el = document.querySelector(item.href);
+                  if (el) {
+                    const y = el.getBoundingClientRect().top + window.scrollY - 64;
+                    window.scrollTo({ top: y, behavior: "smooth" });
+                  }
                 }}
                 className="relative text-xs tracking-wider text-white hover:text-white transition-colors duration-300 group"
                 role="listitem"
@@ -119,7 +123,11 @@ export function Navbar() {
                   onClick={(e) => {
                     e.preventDefault();
                     setMobileOpen(false);
-                    document.querySelector(item.href)?.scrollIntoView({ behavior: "smooth" });
+                    const el = document.querySelector(item.href);
+                    if (el) {
+                      const y = el.getBoundingClientRect().top + window.scrollY - 64;
+                      window.scrollTo({ top: y, behavior: "smooth" });
+                    }
                   }}
                   className="text-lg tracking-wider text-white hover:text-white transition-colors"
                   role="listitem"
