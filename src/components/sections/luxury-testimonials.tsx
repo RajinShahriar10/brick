@@ -267,8 +267,7 @@ export function LuxuryTestimonials({ testimonials }: { testimonials: Testimonial
           </div>
         </div>
 
-        <div className="absolute left-0 top-0 bottom-0 w-20 sm:w-40 bg-gradient-to-r from-[#8d7a7a] to-transparent pointer-events-none z-10" />
-        <div className="absolute right-0 top-0 bottom-0 w-20 sm:w-40 bg-gradient-to-l from-[#8d7a7a] to-transparent pointer-events-none z-10" />
+
       </div>
     </section>
   );
