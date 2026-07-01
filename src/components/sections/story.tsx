@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { Badge } from "@/components/ui/badge";
 
@@ -50,7 +50,7 @@ function BrickAnimation({ stageIndex }: { stageIndex: number }) {
   const brickBody = "#B84A28";
   const brickDark = "#8B3A20";
 
-  const dur = 0.6;
+  const dur = 0.8;
   const serialNum = Math.floor((stageIndex / 4) * 99999);
 
   return (
@@ -73,7 +73,7 @@ function BrickAnimation({ stageIndex }: { stageIndex: number }) {
         </linearGradient>
       </defs>
 
-      <motion.g animate={{ opacity: stageIndex === 0 ? 1 : 0, y: stageIndex === 0 ? 0 : 20 }} transition={{ duration: dur }}>
+      <motion.g animate={{ opacity: stageIndex === 0 ? 1 : 0, y: stageIndex === 0 ? 0 : 20 }} transition={{ duration: dur, ease: [0.25, 0.1, 0.25, 1] }}>
         <ellipse cx="60" cy="55" rx={25} ry={10} fill={clay} />
         <ellipse cx="55" cy="48" rx={18} ry={14} fill="#A0704A" />
         <ellipse cx="52" cy="42" rx={12} ry={10} fill="#B8845A" />
@@ -82,30 +82,30 @@ function BrickAnimation({ stageIndex }: { stageIndex: number }) {
         <circle cx="54" cy="35" r="1" fill="#8B5E3C" opacity={0.3} />
       </motion.g>
 
-      <motion.g animate={{ opacity: stageIndex >= 1 ? 1 : 0, y: stageIndex >= 1 ? 0 : -20 }} transition={{ duration: dur }}>
+      <motion.g animate={{ opacity: stageIndex >= 1 ? 1 : 0, y: stageIndex >= 1 ? 0 : -20 }} transition={{ duration: dur, ease: [0.25, 0.1, 0.25, 1] }}>
         <rect x="15" y="20" width="90" height="40" rx="3" fill="url(#brickGrad)" />
         {[30, 50].map((y) => (
           <line key={y} x1="20" y1={y} x2="100" y2={y} stroke="rgba(0,0,0,0.08)" strokeWidth="0.5" />
         ))}
       </motion.g>
 
-      <motion.g animate={{ opacity: stageIndex === 1 ? 1 : 0, y: stageIndex === 1 ? 0 : 15 }} transition={{ duration: dur }}>
+      <motion.g animate={{ opacity: stageIndex === 1 ? 1 : 0, y: stageIndex === 1 ? 0 : 15 }} transition={{ duration: dur, ease: [0.25, 0.1, 0.25, 1] }}>
         {[25, 30, 35, 40, 45, 50, 55].map((y) => (
           <line key={y} x1="20" y1={y} x2="100" y2={y} stroke="rgba(255,255,255,0.08)" strokeWidth="0.5" />
         ))}
       </motion.g>
 
-      <motion.g animate={{ opacity: stageIndex === 2 ? 1 : 0, y: stageIndex === 2 ? 0 : 15 }} transition={{ duration: dur }}>
+      <motion.g animate={{ opacity: stageIndex === 2 ? 1 : 0, y: stageIndex === 2 ? 0 : 15 }} transition={{ duration: dur, ease: [0.25, 0.1, 0.25, 1] }}>
         <rect x="15" y="20" width="90" height="40" rx="3" fill="url(#heatGlow)" />
         <rect x="15" y="20" width="90" height="40" rx="3" fill="rgba(255,68,0,0.15)" />
       </motion.g>
 
-      <motion.g animate={{ opacity: stageIndex >= 3 ? 1 : 0 }} transition={{ duration: dur }}>
+      <motion.g animate={{ opacity: stageIndex >= 3 ? 1 : 0 }} transition={{ duration: dur, ease: [0.25, 0.1, 0.25, 1] }}>
         <rect x="15" y="20" width="90" height="40" rx="3" fill="url(#coating)" />
         <rect x="20" y="23" width="80" height="4" rx="2" fill="rgba(255,255,255,0.12)" />
       </motion.g>
 
-      <motion.g animate={{ opacity: stageIndex >= 4 ? 1 : 0 }} transition={{ duration: dur }}>
+      <motion.g animate={{ opacity: stageIndex >= 4 ? 1 : 0 }} transition={{ duration: dur, ease: [0.25, 0.1, 0.25, 1] }}>
         <text
           x="60" y="47"
           textAnchor="middle"
@@ -128,31 +128,55 @@ export function StorySection() {
   const ref = useRef<HTMLElement>(null);
   const [stageIndex, setStageIndex] = useState(0);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const clayRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
 
-  const clayY = useTransform(scrollYProgress, [0, 1], [0, 280]);
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 80, damping: 25 });
+  const clayY = useTransform(smoothProgress, [0, 1], [0, 280]);
 
   useEffect(() => {
-    const els = itemRefs.current.filter(Boolean) as HTMLDivElement[];
-    const observer = new IntersectionObserver(
-      (entries) => {
-        let maxIdx = -1;
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const idx = Number(entry.target.getAttribute("data-idx"));
-            if (idx > maxIdx) maxIdx = idx;
-          }
-        });
-        if (maxIdx >= 0) setStageIndex(maxIdx);
-      },
-      { threshold: 0.4 }
-    );
-    els.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+    const items = itemRefs.current.filter(Boolean) as HTMLDivElement[];
+    if (items.length === 0) return;
+
+    let ticking = false;
+
+    const update = () => {
+      const clayEl = clayRef.current;
+      if (!clayEl) { ticking = false; return; }
+
+      const clayRect = clayEl.getBoundingClientRect();
+      const clayTop = clayRect.top;
+
+      let closest = 0;
+      let minDist = Infinity;
+
+      for (let i = 0; i < items.length; i++) {
+        const rect = items[i].getBoundingClientRect();
+        const dist = Math.abs(rect.top - clayTop);
+        if (dist < minDist) {
+          minDist = dist;
+          closest = i;
+        }
+      }
+
+      setStageIndex(closest);
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    update();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const currentStage = timeline[stageIndex];
@@ -232,7 +256,7 @@ export function StorySection() {
           </div>
 
           {/* Brick — sticky with scroll-driven Y motion so it swaps down with the scroll */}
-          <div className="relative md:sticky md:top-32 md:self-start flex flex-col items-center justify-start">
+          <div ref={clayRef} className="relative md:sticky md:top-32 md:self-start flex flex-col items-center justify-start">
             <motion.div style={{ y: clayY }} className="w-full max-w-sm">
               <div className="rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-8">
                 <div className="h-40">
