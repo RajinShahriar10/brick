@@ -136,14 +136,6 @@ export const testimonials = [
 
 export const faq = [
   {
-    question: "Is this a joke?",
-    answer: "No. BRICK ÉLITE is a serious product for serious collectors. Our bricks are precision-engineered in limited batches. We recommend watching the product video before judging.",
-  },
-  {
-    question: "What can I do with a BRICK ÉLITE?",
-    answer: "Display it. Hold it. Tap it (it rings at A440). Use it as a paperweight. Build a small, exceptionally expensive wall. Our collectors have used them as bookends, doorstops, meditation objects, and sound design tools.",
-  },
-  {
     question: "How is it different from a normal brick?",
     answer: "A standard brick costs $0.50, has ±5mm tolerance, absorbs up to 25% water, and crumbles in a century. Our brick costs more, is machined to ±0.1mm, repels all moisture, and will outlast your great-grandchildren.",
   },
