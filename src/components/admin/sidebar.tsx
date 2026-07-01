@@ -15,6 +15,7 @@ import {
   Settings,
   Users,
   Award,
+  Mail,
   LogOut,
   Menu,
   X,
@@ -31,6 +32,7 @@ const links = [
   { href: "/admin/testimonials", label: "Testimonials", icon: MessageSquareQuote },
   { href: "/admin/leaderboard", label: "Leaderboard", icon: Trophy },
   { href: "/admin/achievements", label: "Achievements", icon: Award },
+  { href: "/admin/contacts", label: "Inquiries", icon: Mail },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
