@@ -262,7 +262,7 @@ export function StorySection() {
                 <div className="h-40">
                   <BrickAnimation stageIndex={stageIndex} />
                 </div>
-                <div className="mt-4 text-center">
+                <div className="mt-4 text-center hidden md:block">
                   <p className="text-[10px] tracking-[0.3em] text-red-500/60 uppercase font-mono">{currentStage.year}</p>
                   <p className="text-xl font-bold text-white mt-1">{currentStage.title}</p>
                   <p className="text-[10px] text-white/40 mt-2 tracking-wider uppercase">{stageLabel}</p>
