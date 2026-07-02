@@ -7,7 +7,7 @@ import { StaggerChildren, StaggerItem } from "@/components/animations/stagger-ch
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+import { useCheckout } from "@/components/checkout/checkout-context";
 
 const productFeatures = [
   "Hand-selected Tuscan Terra Rossa clay",
@@ -19,7 +19,7 @@ const productFeatures = [
 ];
 
 export function ProductShowcase() {
-  const router = useRouter();
+  const { onOpen } = useCheckout();
 
   return (
     <section id="product" className="relative py-32 px-6 bg-[#8d7a7a]">
@@ -47,7 +47,7 @@ export function ProductShowcase() {
                   <p className="text-3xl font-bold text-white">{formatPrice(9999)}</p>
                   <p className="text-xs text-white line-through">{formatPrice(12999)}</p>
                 </div>
-                <Button size="lg" onClick={() => router.push("/checkout")}>
+                <Button size="lg" onClick={() => onOpen()}>
                   <ShoppingBag className="h-4 w-4 mr-3" />
                   Add to Cart
                 </Button>

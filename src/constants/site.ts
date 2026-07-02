@@ -57,18 +57,18 @@ export const features = [
 export const specs = [
   { label: "Material", value: "Premium Clay Alloy™", icon: "🧱" },
   { label: "Compression Strength", value: "9,999 MPa", icon: "💪" },
-  { label: "Luxury Rating", value: "★★★★★", icon: "👑" },
-  { label: "Exclusivity", value: "Only 10,000,000 Available Worldwide", icon: "🎯" },
+  { label: "Class", value: "Ultra-Luxury Building Material", icon: "👑" },
+  { label: "Exclusivity", value: "Limited to 10,000,000 Pieces Worldwide", icon: "🎯" },
   { label: "Lifetime", value: "Several Centuries", icon: "⏳" },
-  { label: "Weight", value: "Surprisingly Heavy™", icon: "🏋️" },
-  { label: "Aerodynamic Drag", value: "Negligible (It\u2019s a brick)", icon: "🛩️" },
+  { label: "Weight", value: "2.4 kg — Purposeful Density", icon: "🏋️" },
+  { label: "Aerodynamic Drag", value: "Cd 0.82 — Consistent with Its Form", icon: "🛩️" },
   { label: "Color", value: "\u201CRed\u201D (Patent Pending)", icon: "🎨" },
-  { label: "Sound When Dropped", value: "Satisfying Thud", icon: "🔊" },
-  { label: "Wi-Fi Pass-Through", value: "None (Intentional)", icon: "📡" },
-  { label: "Monthly Subscription", value: "Not Required", icon: "💰" },
-  { label: "Carbon Footprint", value: "0 (We Count Differently)", icon: "🌱" },
-  { label: "Unboxing Experience", value: "Life-Changing", icon: "📦" },
-  { label: "Resale Value", value: "Appreciating", icon: "📈" },
+  { label: "Acoustic Signature", value: "Deep, Single-Frequency Resonance (A440)", icon: "🔊" },
+  { label: "Connectivity", value: "Analog by Design", icon: "📡" },
+  { label: "Ownership Model", value: "Perpetual — No Recurring Fees", icon: "💰" },
+  { label: "Carbon Footprint", value: "Net-Zero Certified", icon: "🌱" },
+  { label: "Unboxing Experience", value: "Archival-Grade Presentation", icon: "📦" },
+  { label: "Resale Value", value: "Appreciating Asset Class", icon: "📈" },
 ];
 
 export const testimonials = [

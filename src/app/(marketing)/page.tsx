@@ -6,10 +6,6 @@ import { Navbar } from "@/components/layout/navbar";
 import { LuxuryFooter } from "@/components/layout/luxury-footer";
 import { TestimonialsWrapper } from "@/components/sections/testimonials-wrapper";
 
-const LoadingScreen = dynamicImport(
-  () => import("@/components/sections/loading-screen").then((m) => ({ default: m.LoadingScreen }))
-);
-
 const StorySection = dynamicImport(
   () => import("@/components/sections/story").then((m) => ({ default: m.StorySection }))
 );
@@ -39,7 +35,6 @@ export const dynamic = "force-dynamic";
 export default function HomePage() {
   return (
     <>
-      <LoadingScreen />
       <Navbar />
       <main id="main-content" role="main">
         <Hero />

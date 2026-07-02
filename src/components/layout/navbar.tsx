@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MagneticButton } from "@/components/ui/magnetic-button";
+import { useCheckout } from "@/components/checkout/checkout-context";
 
 const navItems = [
   { title: "Story", href: "#story" },
@@ -19,6 +20,7 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [scrollPct, setScrollPct] = useState(0);
+  const { onOpen } = useCheckout();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -84,12 +86,10 @@ export function Navbar() {
           </div>
 
           <div className="flex items-center gap-3">
-            <a href="/checkout" aria-label="Order now">
-              <MagneticButton size="sm" className="hidden sm:inline-flex">
-                <ShoppingBag className="h-3.5 w-3.5 mr-2" aria-hidden="true" />
-                Order Now
-              </MagneticButton>
-            </a>
+            <MagneticButton size="sm" className="hidden sm:inline-flex" onClick={() => onOpen()}>
+              <ShoppingBag className="h-3.5 w-3.5 mr-2" aria-hidden="true" />
+              Order Now
+            </MagneticButton>
             <button
               className="md:hidden p-2 text-white hover:text-white"
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -135,12 +135,19 @@ export function Navbar() {
                   {item.title}
                 </a>
               ))}
-              <a href="/checkout" onClick={() => setMobileOpen(false)} className="mt-4 w-full max-w-xs" aria-label="Order now">
-                <MagneticButton className="w-full" size="lg">
+              <div className="mt-4 w-full max-w-xs">
+                <MagneticButton
+                  className="w-full"
+                  size="lg"
+                  onClick={() => {
+                    setMobileOpen(false);
+                    onOpen();
+                  }}
+                >
                   <ShoppingBag className="h-4 w-4 mr-3" aria-hidden="true" />
                   Order Now — $1,499
                 </MagneticButton>
-              </a>
+              </div>
             </div>
           </motion.div>
         )}
