@@ -8,9 +8,9 @@ export async function GET() {
   try {
     const scores = await prisma.gameScore.findMany({
       orderBy: { score: "desc" },
-      take: 10,
+      take: 50,
     });
-    return cachedResponse(scores, { duration: 30, swr: 60, tags: ["scores"] });
+    return cachedResponse(scores, { duration: 5, swr: 10, tags: ["scores"] });
   } catch {
     return NextResponse.json(
       { error: "Failed to fetch scores" },

@@ -373,9 +373,10 @@ export function MiniGame() {
     });
   }, []);
 
-  const fetchLeaderboard = useCallback(async () => {
+  const fetchLeaderboard = useCallback(async (bustCache?: boolean) => {
     try {
-      const res = await fetch("/api/game/scores");
+      const url = bustCache ? `/api/game/scores?_=${Date.now()}` : "/api/game/scores";
+      const res = await fetch(url);
       if (!res.ok) throw new Error("Failed");
       const data = await res.json();
       setLeaderboard(data);
@@ -406,7 +407,7 @@ export function MiniGame() {
       if (res.ok) {
         const data = await res.json();
         if (data.rank) setFinalRank(data.rank);
-        fetchLeaderboard();
+        fetchLeaderboard(true);
       }
     } catch { /* silent */ }
     finally { setSaving(false); }
@@ -988,7 +989,7 @@ export function MiniGame() {
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-sm font-bold text-white tracking-wide">Leaderboard</h3>
                 {loadError && (
-                  <button onClick={fetchLeaderboard} className="text-[10px] text-white hover:text-white transition-colors">Retry</button>
+                  <button onClick={() => fetchLeaderboard(true)} className="text-[10px] text-white hover:text-white transition-colors">Retry</button>
                 )}
               </div>
               {loadError ? (
@@ -1002,8 +1003,8 @@ export function MiniGame() {
                   <p className="text-[10px] mt-1">Be the first to play!</p>
                 </div>
               ) : (
-                <div className="space-y-2">
-                  {leaderboard.slice(0, 20).map((entry, i) => {
+                <div className="space-y-2 max-h-[380px] overflow-y-auto pr-1 scrollbar-thin">
+                  {leaderboard.map((entry, i) => {
                     const medals = ["#FFD700", "#C0C0C0", "#CD7F32"];
                     return (
                       <motion.div
